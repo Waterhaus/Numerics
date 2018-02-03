@@ -62,9 +62,32 @@ namespace MyMathLibTests
         public void Skalar_v1_and_v1_returnNorm()
         {
             //настроить входные параметры
-            MyMathLib.MyMath.Vector v = new MyMathLib.MyMath.Vector.RandomVector()
-           //запустить код
-           //проверить на корректность
+            int n = 10;
+            MyMathLib.MyMath.Vector v = MyMathLib.MyMath.Vector.RandomVector(n);
+            double expect = v.Norm;
+            double EPS = 0.0000001d;
+            //запустить код
+            double actual = Math.Sqrt( v * v );
+            //проверить на корректность
+
+            Assert.AreEqual(expect, actual, EPS, "Скалярное произведение должно выраждаться в норму, но нет");
+        }
+
+        [TestMethod]
+        public void Skalar_1_and_2_return20()
+        {
+            //настроить входные параметры
+            int n = 10;
+            MyMathLib.MyMath.Vector v = MyMathLib.MyMath.Vector.GetConstVector(1d,n);
+            MyMathLib.MyMath.Vector w = MyMathLib.MyMath.Vector.GetConstVector(2d, n);
+
+            double expect = 20d;
+            double EPS = 0.000000001d;
+            //запустить код
+            double actual = w*v;
+            //проверить на корректность
+
+            Assert.AreEqual(expect, actual, EPS, "Скалярное произведение должно работать, но нет");
         }
     }
 }
