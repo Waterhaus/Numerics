@@ -66,5 +66,34 @@ namespace MyMathLibTests
 
             //проверить правильность
         }
+
+
+        [TestMethod]
+        public void GetStep_10and0and1_return10()
+        {
+            //задать(настроить) параметры
+            double expect = 1d;
+            double EPS = 0.00000001d;
+            //запустить код
+            double h = MyMathLib.MyMath.Basic.GetStep(10, 0, 1);
+            double actual = 0 + 9 * h;
+            //проверить правильность
+
+            Assert.AreEqual(expect, actual, EPS, "Не корректно находит шаг");
+        }
+
+        [ExpectedException(typeof(ArgumentException), "Границы a и b равны")]
+        [TestMethod]
+        public void GetStep_1and1_returnexeption()
+        {
+            //задать(настроить) параметры
+            
+            //запустить код
+            MyMathLib.MyMath.Basic.GetStep(10, 1, 1);
+
+            //проверить правильность
+        }
+
+
     }
 }

@@ -63,7 +63,7 @@ namespace MyMathLibTests
         {
             //настроить входные параметры
             int n = 10;
-            MyMathLib.MyMath.Vector v = MyMathLib.MyMath.Vector.RandomVector(n);
+            MyMathLib.Vector v = MyMathLib.Vector.RandomVector(n);
             double expect = v.Norm;
             double EPS = 0.0000001d;
             //запустить код
@@ -78,8 +78,8 @@ namespace MyMathLibTests
         {
             //настроить входные параметры
             int n = 10;
-            MyMathLib.MyMath.Vector v = MyMathLib.MyMath.Vector.GetConstVector(1d,n);
-            MyMathLib.MyMath.Vector w = MyMathLib.MyMath.Vector.GetConstVector(2d, n);
+            MyMathLib.Vector v = MyMathLib.Vector.GetConstVector(1d,n);
+            MyMathLib.Vector w = MyMathLib.Vector.GetConstVector(2d, n);
 
             double expect = 20d;
             double EPS = 0.000000001d;
