@@ -26,5 +26,16 @@ namespace MyMathLib
             degree = 0;
             a_border = b_border = 0;
         }
+
+        public static List<double> CreateUniformGrid(int GridSize,double a, double b)
+        {
+            List<double> grid = new List<double>();
+            double h = MyMath.Basic.GetStep(GridSize, a, b);
+
+            for (int i = 0; i < GridSize; i++)
+                grid.Add(a + i*h);
+
+            return grid;
+        }
     }
 }
