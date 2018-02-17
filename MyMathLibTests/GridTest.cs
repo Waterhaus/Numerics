@@ -80,7 +80,51 @@ namespace MyMathLibTests
 
         }
 
+        [TestMethod]
+        public void CreateBSplineClassicGrid_2_10_0_1_return2()
+        {
+            //enter data
+            int deg = 2;
+            int GridSize = 10;
+            double a = 0;
+            double b = 1;
+            int expect = 2;
+            //code
+            List<double> grid = MyMathLib.Grid.CreateBSplineClassicGrid(deg, GridSize, a, b);
+            int i = 0;
+            for (i = 0; grid[i] == grid[i + 1]; i++);
 
+            int j = 0;
+            for (j = 0; grid[grid.Count - 1 - j] == grid[grid.Count - 2 - j]; j++) ;
+
+            //compare
+            Assert.AreEqual(expect, i + 1,"Не достаточно одинаковых элементов в начале");
+
+            Assert.AreEqual(expect, j + 1, "Не достаточно одинаковых элементов в конце");
+        }
+
+        [TestMethod]
+        public void CreateBSplineClassicGrid_4_10_0_1_return3()
+        {
+            //enter data
+            int deg = 4;
+            int GridSize = 10;
+            double a = 0;
+            double b = 1;
+            int expect = 3;
+            //code
+            List<double> grid = MyMathLib.Grid.CreateBSplineClassicGrid(deg, GridSize, a, b);
+            int i = 0;
+            for (i = 0; grid[i] == grid[i + 1]; i++) ;
+
+            int j = 0;
+            for (j = 0; grid[grid.Count - 1 - j] == grid[grid.Count - 2 - j]; j++) ;
+
+            //compare
+            Assert.AreEqual(expect, i + 1, "Не достаточно одинаковых элементов в начале");
+
+            Assert.AreEqual(expect, j + 1, "Не достаточно одинаковых элементов в конце");
+        }
 
     }
     }
