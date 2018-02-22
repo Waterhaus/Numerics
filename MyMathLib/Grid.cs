@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MyMathLib
 {
-    public enum GridType { Uniform, BSplineStandart}
+    public enum GridType { Uniform, BSplineStandart, ClassicQubic}
 
     public class Grid
     {
@@ -59,6 +59,21 @@ namespace MyMathLib
             degree = deg;
             extendetGrid = CreateBSplineClassicGrid(deg,GridSize,a,b);
 
+        }
+
+        public Grid(GridType type, int GridSize, double a, double b)
+        {
+            switch (type)
+            {
+                case GridType.ClassicQubic:
+
+                    a_border = a;
+                    b_border = b;
+                    degree = 4;
+                    extendetGrid = CreateBSplineClassicGrid(degree, GridSize, a, b);
+
+                    break;
+            }
         }
         public double this[int i]
         {
@@ -114,6 +129,16 @@ namespace MyMathLib
 
             return grid;
 
+        }
+
+        public override string ToString()
+        {
+            string S = "<";
+
+            foreach (double c in extendetGrid)
+                S += c.ToString("0.00") + " ";
+            S += ">";
+            return S;
         }
     }
 }
