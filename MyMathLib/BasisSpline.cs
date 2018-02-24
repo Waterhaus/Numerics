@@ -56,6 +56,9 @@ namespace MyMathLib
             //slow calculation
             public static double ClassicBasisSpline(double x, Grid grid, int deg, int index)
             {
+                if ( index < 0) throw new ArgumentException("Выход за границы массива");
+               
+
                 if(deg == 0)
                 if (x >= grid[index] && x < grid[index + 1])
                 {
@@ -63,8 +66,17 @@ namespace MyMathLib
                 }
                 else return 0;
 
-                double C1 = (x - grid[index]) / (grid[index + deg] - grid[index]);
-                double C2 = (grid[index + deg + 1] - x) / (grid[index + deg + 1] - grid[index + 1]);
+                double C1, C2;
+                C1 = C2 = 0;
+
+                double temp = (grid[index + deg] - grid[index]);
+                if (deg + index < grid.Count && temp > 0)
+                    C1 = (x - grid[index]) / temp;
+
+                temp = (grid[index + deg + 1] - grid[index + 1]);
+
+                if (deg + index + 1 < grid.Count && temp > 0)
+                    C2 = (grid[index + deg + 1] - x) /temp ;
 
                 return C1 * ClassicBasisSpline(x, grid, deg - 1, index) + C2 * ClassicBasisSpline(x, grid, deg - 1, index + 1);
             }

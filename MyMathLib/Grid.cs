@@ -15,22 +15,31 @@ namespace MyMathLib
         private int degree;
         private double a_border;
         private double b_border;
+        private int dim;
 
         public int SplineDegree
         {
             get { return degree; }
         }
 
+        //true size
         public int Count
         {
             get { return extendetGrid.Count; }
         }
 
+        public int Dimetion
+        {
+            get { return dim; }
+        }
+
+        //левая граница отрезка [a b]
         public double Left
         {
             get { return a_border; }
         }
 
+        //правая граница отрезка [a b]
         public double Right
         {
             get { return b_border; }
@@ -49,7 +58,7 @@ namespace MyMathLib
             b_border = b;
             degree = 0;
             extendetGrid = CreateUniformGrid(GridSize, a, b);
-
+            dim = GridSize;
         }
 
         public Grid(int deg, int GridSize, double a, double b)
@@ -58,7 +67,7 @@ namespace MyMathLib
             b_border = b;
             degree = deg;
             extendetGrid = CreateBSplineClassicGrid(deg,GridSize,a,b);
-
+            dim = GridSize;
         }
 
         public Grid(GridType type, int GridSize, double a, double b)
@@ -71,7 +80,7 @@ namespace MyMathLib
                     b_border = b;
                     degree = 4;
                     extendetGrid = CreateBSplineClassicGrid(degree, GridSize, a, b);
-
+                    dim = GridSize;
                     break;
             }
         }
