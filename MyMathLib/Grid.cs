@@ -16,6 +16,8 @@ namespace MyMathLib
         private double a_border;
         private double b_border;
         private int dim;
+        public GridType Type;
+
 
         public int SplineDegree
         {
@@ -81,6 +83,7 @@ namespace MyMathLib
                     degree = 4;
                     extendetGrid = CreateBSplineClassicGrid(degree, GridSize, a, b);
                     dim = GridSize;
+                    Type = GridType.ClassicQubic;
                     break;
             }
         }
@@ -148,6 +151,16 @@ namespace MyMathLib
                 S += c.ToString("0.00") + " ";
             S += ">";
             return S;
+        }
+
+        public int Find(double x)
+        {
+            if (x < extendetGrid[0] || x > extendetGrid[extendetGrid.Count - 1]) throw new ArgumentException("Точка х вне границ отрезка!");
+            for(int index = 0; index < extendetGrid.Count; index++)
+            {
+                if (x >= extendetGrid[index] && x < extendetGrid[index + 1]) return index;
+            }
+            return -1;
         }
     }
 }

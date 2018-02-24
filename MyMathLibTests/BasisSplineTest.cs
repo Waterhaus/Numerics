@@ -95,5 +95,22 @@ namespace MyMathLibTests
 
         }
 
+        [TestMethod]
+        public void BSPLVB_x_sumB_return1()
+        {
+            //setup
+            int deg = 3; //кубический сплайн
+            MyMathLib.Grid tau = new MyMathLib.Grid(MyMathLib.GridType.ClassicQubic,4, 0, 3);
+            double x = 0.5d;
+            double expect = 1d;
+            //run
+            double []mas = MyMathLib.BasisSpline.DeBoorMethods.BSPLVB(x, tau, deg);
+            double actual = MyMathLib.MyMath.Basic.SumArray(mas);
+
+            //compare
+            Assert.AreEqual(expect, actual, 0.00000001d, "Сумма сплайнов должна ровняться 1");
+
+        }
+
     }
 }

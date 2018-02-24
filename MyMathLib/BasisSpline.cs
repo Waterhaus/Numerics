@@ -17,8 +17,9 @@ namespace MyMathLib
         public class DeBoorMethods
         {
             //fast calculation
-            public static double[] BSPLVB(double x, Grid grid, int deg, int index)
+            public static double[] BSPLVB(double x, Grid grid, int deg)
             {
+                int index = grid.Find(x);
 
                 double[] b = new double[deg];
                 double[] copy_b = new double[deg];
@@ -79,6 +80,18 @@ namespace MyMathLib
                     C2 = (grid[index + deg + 1] - x) /temp ;
 
                 return C1 * ClassicBasisSpline(x, grid, deg - 1, index) + C2 * ClassicBasisSpline(x, grid, deg - 1, index + 1);
+            }
+
+            public static double StandartB(double x, Grid tau, int index)
+            {
+                switch (tau.Type)
+                {
+                    case GridType.ClassicQubic:
+                        return ClassicBasisSpline(x, tau, 2, index);
+                       
+
+                }
+                return 0;
             }
         }
     }
