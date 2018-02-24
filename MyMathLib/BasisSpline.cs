@@ -82,6 +82,7 @@ namespace MyMathLib
                 return C1 * ClassicBasisSpline(x, grid, deg - 1, index) + C2 * ClassicBasisSpline(x, grid, deg - 1, index + 1);
             }
 
+            //основан на рекурсивном методе
             public static double StandartB(double x, Grid tau, int index)
             {
                 switch (tau.Type)
@@ -92,6 +93,23 @@ namespace MyMathLib
 
                 }
                 return 0;
+            }
+
+            //основан на bsplvb
+            public static double DeBoorB(double x, Grid tau, int index)
+            {
+
+                switch (tau.Type)
+                {
+                    case GridType.ClassicQubic:
+                        double[] b = BSPLVB(x,tau,3);
+                        int I = tau.Find(x);
+                        int J = index;
+                        break;
+
+                }
+                return 0;
+
             }
         }
     }

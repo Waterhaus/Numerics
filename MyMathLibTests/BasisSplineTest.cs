@@ -112,5 +112,22 @@ namespace MyMathLibTests
 
         }
 
+        [TestMethod]
+        public void BSPLVB_comparewithClassic_returnCBx()
+        {
+            //setup
+            int deg = 3; //кубический сплайн
+            MyMathLib.Grid tau = new MyMathLib.Grid(MyMathLib.GridType.ClassicQubic, 4, 0, 3);
+            double x = 1.25d;
+            double expect = MyMathLib.BasisSpline.DeBoorMethods.StandartB(x,tau,1);
+            //run
+            double[] mas = MyMathLib.BasisSpline.DeBoorMethods.BSPLVB(x, tau, deg);
+            double actual = mas[0];
+
+            //compare
+            Assert.AreEqual(expect, actual, 0.00000001d, "Должны совпадать рекурсивный и bsplvb");
+
+        }
+
     }
 }
