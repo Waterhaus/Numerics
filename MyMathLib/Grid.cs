@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MyMathLib
 {
-    public enum GridType { Uniform, BSplineStandart, ClassicQubic}
+    public enum GridType { Uniform, BSplineStandart, ClassicQubic, ClassicQuadratic, ClassicLinear}
 
     public class Grid
     {
@@ -85,6 +85,25 @@ namespace MyMathLib
                     dim = GridSize;
                     Type = GridType.ClassicQubic;
                     break;
+                case GridType.ClassicQuadratic:
+
+                    a_border = a;
+                    b_border = b;
+                    degree = 3;
+                    extendetGrid = CreateBSplineClassicGrid(degree, GridSize, a, b);
+                    dim = GridSize;
+                    Type = GridType.ClassicQuadratic;
+                    break;
+
+                case GridType.ClassicLinear:
+
+                    a_border = a;
+                    b_border = b;
+                    degree = 2;
+                    extendetGrid = CreateBSplineClassicGrid(degree, GridSize, a, b);
+                    dim = GridSize;
+                    Type = GridType.ClassicLinear;
+                    break;
             }
         }
         public double this[int i]
@@ -126,7 +145,7 @@ namespace MyMathLib
                 double begin = grid[0];
                 double end = grid[grid.Count - 1];
                 int count = deg / 2;
-                
+
 
                 for (int k = 1; k <= count; k++)
                 {
@@ -134,7 +153,26 @@ namespace MyMathLib
                     grid.Add(end);
                 }
 
-            } else throw new System.ArgumentException("Степень должна быть четной!");
+            }
+            else
+            {
+                grid = CreateUniformGrid(GridSize, a, b);
+                double begin = grid[0];
+                double end = grid[grid.Count - 1];
+
+                int count = (deg - 1) / 2;
+                for (int k = 1; k <= count + 1; k++)
+                {
+                    grid.Insert(0, begin);
+                   
+                }
+
+                for (int k = 1; k <= count; k++)
+                {
+                    grid.Add(end);
+
+                }
+            }
             
 
             

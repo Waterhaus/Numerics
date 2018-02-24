@@ -57,7 +57,7 @@ namespace MyMathLib
             //slow calculation
             public static double ClassicBasisSpline(double x, Grid grid, int deg, int index)
             {
-                if ( index < 0) throw new ArgumentException("Выход за границы массива");
+                if (index < 0) throw new ArgumentException("Выход за границы массива");
                
 
                 if(deg == 0)
@@ -69,15 +69,25 @@ namespace MyMathLib
 
                 double C1, C2;
                 C1 = C2 = 0;
+                double temp = 0;
 
-                double temp = (grid[index + deg] - grid[index]);
-                if (deg + index < grid.Count && temp > 0)
-                    C1 = (x - grid[index]) / temp;
+                if (index + deg < grid.Count)
+                {
+                    temp = (grid[index + deg] - grid[index]);
+                    if (temp > 0)
+                        C1 = (x - grid[index]) / temp;
+                }
 
-                temp = (grid[index + deg + 1] - grid[index + 1]);
+                if (index + deg + 1 < grid.Count)
+                {
+                    temp = (grid[index + deg + 1] - grid[index + 1]);
 
-                if (deg + index + 1 < grid.Count && temp > 0)
-                    C2 = (grid[index + deg + 1] - x) /temp ;
+                    if (temp > 0)
+                        C2 = (grid[index + deg + 1] - x) / temp;
+                }
+              
+
+                
 
                 return C1 * ClassicBasisSpline(x, grid, deg - 1, index) + C2 * ClassicBasisSpline(x, grid, deg - 1, index + 1);
             }
@@ -88,8 +98,13 @@ namespace MyMathLib
                 switch (tau.Type)
                 {
                     case GridType.ClassicQubic:
+                        return ClassicBasisSpline(x, tau, 3, index);
+
+                    case GridType.ClassicQuadratic:
                         return ClassicBasisSpline(x, tau, 2, index);
-                       
+
+                    case GridType.ClassicLinear:
+                        return ClassicBasisSpline(x, tau, 1, index);
 
                 }
                 return 0;
@@ -98,13 +113,22 @@ namespace MyMathLib
             //основан на bsplvb
             public static double DeBoorB(double x, Grid tau, int index)
             {
-
+                int J = tau.Find(x);
+                int k = -index + J;
+                double[] b;
                 switch (tau.Type)
                 {
                     case GridType.ClassicQubic:
-                        double[] b = BSPLVB(x,tau,3);
-                        int I = tau.Find(x);
-                        int J = index;
+                        b = BSPLVB(x,tau,4);
+                        return b[k];
+                    case GridType.ClassicQuadratic:
+                        b = BSPLVB(x, tau, 3);
+                        k = k - 2;
+                        Vector v = new Vector(b);
+                        Console.WriteLine("b = " + v.ToString());
+                        Console.WriteLine("k = " + k.ToString());
+                        if(k >= 0)
+                        return b[k];
                         break;
 
                 }
