@@ -28,15 +28,15 @@ namespace MyMathLib
                 b[0] = 1d;
                 double A, B, temp;
                 A = B = temp = 0;
-                for (int k = 1; k <= deg - 1; k++)
+                for (int degree = 1; degree <= deg - 1; degree++)
                 {
-                    for (int i = 0; i <= k; i++)
+                    for (int i = 0; i <= degree; i++)
                     {
-                        d_L[i] = x - grid[index + i - k];
+                        d_L[i] = x - grid[index + i - degree];
                         d_R[i] = grid[index + i + 1] - x;
                     }
 
-                    for (int i = 0; i <= k; i++)
+                    for (int i = 0; i <= degree; i++)
                     {
                         A = B = temp = 0;
                         if (i - 1 >= 0) A = d_L[i] / (d_R[i - 1] + d_L[i]);
@@ -53,6 +53,54 @@ namespace MyMathLib
                 return b;
 
             }
+
+
+            public static double getBSplineValue(int index, int find, Vector b)
+            {
+                int deg = b.Length - 2;
+                if (Math.Abs(find - index) > deg) return 0;
+
+                return b[find - index]; 
+            }
+
+            /**
+ * Create the basis splines for order requested at a particular value of x.
+ * From "A Practical Guide To Splines - Revised Edition" by Carl de Boor p 111
+ * the algorithm for BSPLVB. The value of the spline coefficients can be calculated
+ * based on a cool recursion. This is a simplified and numerically stable algorithm
+ * that seems to be the basis of most bspline implementations including gsl, matlab,etc.
+ * @param all_knots - Original knots vector augmented with order number of endpoints
+ * @param n_knots - Total number of knots.
+ * @param order - Order or order of polynomials, 4 for cubic splines.
+ * @param i - index of value x in knots such that all_knots[i] <= x && all_knots[i+1] > x
+ * @param x - value that we want to evaluate spline at.
+ * @param b - memory to write our coefficients into, must be at least order long.
+ */
+            public static Vector  basis_spline(double x, Grid grid, int deg, int index)
+            {
+                int n_knots = grid.Count;
+                Vector b = new Vector(deg);
+                b[0] = 1;
+                double[] d_R = new double[deg];
+                double[] d_L = new double[deg];
+                double term;
+                double saved;
+                for (int j = 0; j < deg - 1; j++)
+                {
+                    d_R[j] = grid[index + j + 1] - x; // k right values
+                    d_L[j] = x - grid[index - j];     // k left values
+                    saved = 0;
+                    for (int r = 0; r <= j; r++)
+                    {
+                        term = b[r] / (d_R[r] + d_L[j - r]);
+                        b[r] = saved + d_R[r] * term;
+                        saved = d_L[j - r] * term;
+                    }
+                    b[j + 1] = saved;
+                }
+                return b;
+            }
+
 
             //slow calculation
             public static double ClassicBasisSpline(double x, Grid grid, int deg, int index)
@@ -115,20 +163,22 @@ namespace MyMathLib
             {
                 int J = tau.Find(x);
                 int k = -index + J;
-                double[] b;
+                
+                Vector b;
                 switch (tau.Type)
                 {
                     case GridType.ClassicQubic:
-                        b = BSPLVB(x,tau,4);
-                        return b[k];
+                        b = basis_spline(x,tau,4,J);
+                       
+                        if (k >= 0 && k < 4)
+                            return b[k];
+                        break;
+
                     case GridType.ClassicQuadratic:
-                        b = BSPLVB(x, tau, 3);
-                        k = k - 2;
-                        Vector v = new Vector(b);
-                        Console.WriteLine("b = " + v.ToString());
-                        Console.WriteLine("k = " + k.ToString());
-                        if(k >= 0)
-                        return b[k];
+                        b = basis_spline(x, tau, 3, J);
+
+                        if (k >= 0 && k < 3)
+                            return b[k];
                         break;
 
                 }

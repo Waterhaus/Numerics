@@ -72,6 +72,17 @@ namespace MyMathLib
             dim = GridSize;
         }
 
+        public Grid(int deg, double[] tau)
+        {
+            a_border = tau[0];
+            b_border = tau[tau.Length - 1];
+            degree = deg;
+            extendetGrid = CreateBSplineClassicGrid(deg, tau);
+            dim = tau.Length;
+        }
+
+        
+
         public Grid(GridType type, int GridSize, double a, double b)
         {
             switch (type)
@@ -134,14 +145,12 @@ namespace MyMathLib
             return grid;
         }
 
-        public static List<double> CreateBSplineClassicGrid(int deg, int GridSize, double a, double b)
-        {
-            List<double> grid;
 
+        public static void Expend(int deg, ref List<double> grid)
+        {
             if (deg % 2 == 0)
             {
 
-                grid = CreateUniformGrid(GridSize, a, b);
                 double begin = grid[0];
                 double end = grid[grid.Count - 1];
                 int count = deg / 2;
@@ -156,7 +165,7 @@ namespace MyMathLib
             }
             else
             {
-                grid = CreateUniformGrid(GridSize, a, b);
+
                 double begin = grid[0];
                 double end = grid[grid.Count - 1];
 
@@ -164,7 +173,7 @@ namespace MyMathLib
                 for (int k = 1; k <= count + 1; k++)
                 {
                     grid.Insert(0, begin);
-                   
+
                 }
 
                 for (int k = 1; k <= count; k++)
@@ -173,9 +182,24 @@ namespace MyMathLib
 
                 }
             }
-            
 
+
+        }
+
+
+        public static List<double> CreateBSplineClassicGrid(int deg, int GridSize, double a, double b)
+        {
+            List<double> grid = CreateUniformGrid(GridSize, a, b);
+            Expend(deg, ref grid);
             
+            return grid;
+
+        }
+
+        public static List<double> CreateBSplineClassicGrid(int deg, double[] tau)
+        {
+            List<double> grid = new List<double>(tau);
+            Expend(deg, ref grid);
 
             return grid;
 
