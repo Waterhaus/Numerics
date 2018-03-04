@@ -82,6 +82,7 @@ namespace MyMathLibTests
             int OriginalDotsCount = 4;
             MyMathLib.Grid tau = new MyMathLib.Grid(MyMathLib.GridType.ClassicQuadratic, OriginalDotsCount, 0, 3);
             double x = 0.6d;
+            double h = 0.1d;
             Console.WriteLine("Точка х = " + x.ToString());
             Console.WriteLine("Сетка = " + tau.ToString());
 
@@ -90,16 +91,24 @@ namespace MyMathLibTests
             double actual = 0;
             double temp = 0;
 
-            for(int index = 0; index < 4; index++)
+            for (int j = 0; j < 25; j++)
             {
-                temp = MyMathLib.BasisSpline.DeBoorMethods.ClassicBasisSpline(x, tau, deg, index);
-                Console.WriteLine("index = " + index + " B(x) = " + temp.ToString());
-                actual += temp;
+                actual = 0;
+                x = j * h;
+                int c = tau.Find(x);
+                for (int index = c; index < c + 4; index++)
+                {
+                    temp = MyMathLib.BasisSpline.DeBoorMethods.ClassicBasisSpline(x, tau, deg, index);
+                    
+                    actual += temp;
+                }
+                Console.WriteLine("x = " + (j * h).ToString());
+                Assert.AreEqual(expect, actual, 0.00000001d, "В любой точке сумма сплайнов должна ровняться 1");
             }
-            
+
 
             //compare
-            Assert.AreEqual(expect, actual, 0.00000001d, "В любой точке сумма сплайнов должна ровняться 1");
+            
 
         }
 
