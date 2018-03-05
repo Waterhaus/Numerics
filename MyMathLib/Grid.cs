@@ -16,6 +16,10 @@ namespace MyMathLib
         private double a_border;
         private double b_border;
         private int dim;
+
+        private int beginIndex;
+        private int endIndex;
+       
         public GridType Type;
 
 
@@ -47,6 +51,22 @@ namespace MyMathLib
             get { return b_border; }
         }
 
+        public int BeginIndex
+        {
+            get
+            {
+                return beginIndex;
+            }
+        }
+
+        public int EndIndex
+        {
+            get
+            {
+                return endIndex;
+            }
+        }
+
         public Grid()
         {
             extendetGrid = null;
@@ -61,6 +81,9 @@ namespace MyMathLib
             degree = 0;
             extendetGrid = CreateUniformGrid(GridSize, a, b);
             dim = GridSize;
+
+            beginIndex = FindBeginIndex(extendetGrid);
+            endIndex = FindEndIndex(extendetGrid);
         }
 
         public Grid(int deg, int GridSize, double a, double b)
@@ -70,6 +93,9 @@ namespace MyMathLib
             degree = deg;
             extendetGrid = CreateBSplineClassicGrid(deg,GridSize,a,b);
             dim = GridSize;
+
+            beginIndex = FindBeginIndex(extendetGrid);
+            endIndex = FindEndIndex(extendetGrid);
         }
 
         public Grid(int deg, double[] tau)
@@ -79,50 +105,35 @@ namespace MyMathLib
             degree = deg;
             extendetGrid = CreateBSplineClassicGrid(deg, tau);
             dim = tau.Length;
+
+            beginIndex = FindBeginIndex(extendetGrid);
+            endIndex = FindEndIndex(extendetGrid);
         }
 
-        
-
-        public Grid(GridType type, int GridSize, double a, double b)
+        public Grid(int deg, Grid origin, double a, double b)
         {
-            switch (type)
-            {
-                case GridType.ClassicQubic:
+            a_border = a;
+            b_border = b;
+            degree = deg;
+            dim = origin.Count;
 
-                    a_border = a;
-                    b_border = b;
-                    degree = 4;
-                    extendetGrid = CreateBSplineClassicGrid(degree, GridSize, a, b);
-                    dim = GridSize;
-                    Type = GridType.ClassicQubic;
-                    break;
-                case GridType.ClassicQuadratic:
+            int GridSize = dim - degree + 2;
+            extendetGrid = CreateNewBasisSplineGrid(deg, GridSize, a, b);
+            originGrid = origin.extendetGrid;
+            
 
-                    a_border = a;
-                    b_border = b;
-                    degree = 3;
-                    extendetGrid = CreateBSplineClassicGrid(degree, GridSize, a, b);
-                    dim = GridSize;
-                    Type = GridType.ClassicQuadratic;
-                    break;
-
-                case GridType.ClassicLinear:
-
-                    a_border = a;
-                    b_border = b;
-                    degree = 2;
-                    extendetGrid = CreateBSplineClassicGrid(degree, GridSize, a, b);
-                    dim = GridSize;
-                    Type = GridType.ClassicLinear;
-                    break;
-            }
+            beginIndex = FindBeginIndex(extendetGrid);
+            endIndex = FindEndIndex(extendetGrid);
         }
+
+
         public double this[int i]
         {
             //Метод доступа для чтения
             get
             {
                 return extendetGrid[i];
+                
             }
             //Метод доступа для установки
             /*
@@ -186,12 +197,65 @@ namespace MyMathLib
 
         }
 
+        public static void Expend(int left_count, int right_count, ref List<double> grid)
+        {
+            
+
+                double begin = grid[0];
+                double end = grid[grid.Count - 1];
+                
+
+
+                for (int k = 1; k <= left_count; k++)
+                {
+                    grid.Insert(0, begin);
+                   
+                }
+                for (int k = 1; k <= right_count; k++)
+                {
+                    grid.Add(end);
+                }
+
+
+        }
+
+        public static int FindBeginIndex(List<double> mas)
+        {
+            int index = -1;
+            for (index = 0; index < mas.Count - 1; index++)
+            {
+                if (!mas[index].Equals(mas[index + 1])) return index;
+            }
+            return index;
+        }
+
+        public static int FindEndIndex(List<double> mas)
+        {
+            int index = -1;
+            for (index = mas.Count - 1; index >= 1; index--)
+            {
+                if (!mas[index].Equals(mas[index - 1])) return index;
+            }
+            return index;
+        }
+
 
         public static List<double> CreateBSplineClassicGrid(int deg, int GridSize, double a, double b)
         {
             List<double> grid = CreateUniformGrid(GridSize, a, b);
             Expend(deg, ref grid);
             
+            return grid;
+
+        }
+
+
+        public static List<double> CreateNewBasisSplineGrid(int deg, int GridSize, double a, double b)
+        {
+            int p = deg - 1;
+            List<double> grid = CreateUniformGrid(GridSize, a, b);
+            Expend(p,p, ref grid);
+
             return grid;
 
         }
@@ -215,13 +279,28 @@ namespace MyMathLib
             return S;
         }
 
+        public string ToStringOrigin()
+        {
+            string S = "<";
+
+            foreach (double c in originGrid)
+                S += c.ToString("0.00") + " ";
+            S += ">";
+            return S;
+        }
+
         public int Find(double x)
         {
+            double EPS = 0.00000001d;
             if (x < extendetGrid[0] || x > extendetGrid[extendetGrid.Count - 1]) throw new ArgumentException("Точка х вне границ отрезка!");
-            for(int index = 0; index < extendetGrid.Count; index++)
+
+            for (int index = BeginIndex; index < EndIndex; index++)
             {
                 if (x >= extendetGrid[index] && x < extendetGrid[index + 1]) return index;
             }
+
+            if (x.Equals(extendetGrid[EndIndex])) return EndIndex - 1;
+
             return -1;
         }
     }

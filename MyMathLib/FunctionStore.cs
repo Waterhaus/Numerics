@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace MyMathLib
 {
-    class FunctionLib
+    public class FunctionLib
     {
         public delegate double Function(double t);
+        public delegate double MyFunctionDoubleDelegate(params object[] args);
 
         public static double polinom_deg3_1(double t)
         {

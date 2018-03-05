@@ -12,6 +12,9 @@ namespace MyMathLib
     {
         Grid grid;
         BasisSplineType type;
+        public const double EPS = 0.000000000001d;
+
+
 
 
         public class DeBoorMethods
@@ -159,31 +162,35 @@ namespace MyMathLib
             }
 
             //основан на bsplvb
-            public static double DeBoorB(double x, Grid tau, int index)
+            public static double DeBoorB(double x, Grid tau, int deg, int index)
             {
+                if (x < tau.Left || x > tau.Right) return 0;  //если не лежит в отрезке то 0
                 int J = tau.Find(x);
-                int k = -index + J;
+                int p = deg - 1;
+                index = index + tau.BeginIndex;
+
+
+                if (index < J || index > J + p) return 0; //если не в suppBj от 0
+               
+                if (index == tau.BeginIndex && Math.Abs(x - tau.Left) < EPS) return 1d;
+                if (index == tau.EndIndex &&  Math.Abs(x - tau.Right) < EPS) return 1d;
+
+                Vector b = basis_spline(x, tau, deg, J);
+
+                return b[index - J];
                 
-                Vector b;
-                switch (tau.Type)
+            }
+
+            public static Vector GetVectorDeBoorB(int GridSize, double a_border, double b_border, Grid tau, int deg, int index)
+            {
+                Vector f = new Vector(GridSize);
+                double h = MyMath.Basic.GetStep(GridSize, a_border, b_border);
+
+                for (int i = 0; i < GridSize; i++)
                 {
-                    case GridType.ClassicQubic:
-                        b = basis_spline(x,tau,4,J);
-                       
-                        if (k >= 0 && k < 4)
-                            return b[k];
-                        break;
-
-                    case GridType.ClassicQuadratic:
-                        b = basis_spline(x, tau, 3, J);
-
-                        if (k >= 0 && k < 3)
-                            return b[k];
-                        break;
-
+                    f[i] = DeBoorB(a_border + i * h,tau,deg,index);
                 }
-                return 0;
-
+                return f;
             }
         }
     }

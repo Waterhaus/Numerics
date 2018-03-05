@@ -53,6 +53,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="BasisSplineTest.cs" />
+    <Compile Include="BsplineExperiment.cs" />
     <Compile Include="GridTest.cs" />
     <Compile Include="MyMathBasicTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
