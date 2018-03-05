@@ -73,6 +73,16 @@ namespace MyMathLib
                 return f;
             }
 
+            //no test
+            public static double skal(Vector x, Vector y)
+            {
+                double S = 0;
+                for (int i = 0; i < x.Length; i++)
+                {
+                    S += x[i] * y[i];
+                }
+                return S;
+            }
         }
 
       
