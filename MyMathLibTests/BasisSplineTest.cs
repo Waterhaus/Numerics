@@ -194,14 +194,22 @@ namespace MyMathLibTests
         }
 
         [TestMethod]
-        public void bspline_mas1_return046875()
+        public void basis_spline_mas1_return046875()
         {
             //setup
             double expect = 0.46875d;
             double EPS = 0.000000001d;
-            double[] mas1 = { 0, 0, 0, 0, 1 / 3, 2 / 3, 1, 1, 1, 1 };
-            MyMathLib.Grid tau = new MyMathLib.Grid();
-
+            double[] mas1 = { 0, 1d / 3d, 2d / 3d, 1 };
+            int deg = 4;
+            double x = 0.5d;
+            MyMathLib.Grid tau = new MyMathLib.Grid(deg,mas1);
+            //run
+            MyMathLib.Vector v = MyMathLib.BasisSpline.DeBoorMethods.basis_spline(x, tau, deg, 1);
+            Console.WriteLine("grid = " + tau.ToString());
+            Console.WriteLine("b = " + v.ToString());
+            double actual = v[0];
+            //compare
+            Assert.AreEqual(expect, actual, EPS, "Не верное значение базисного сплайна");
         }
 
         [TestMethod]
