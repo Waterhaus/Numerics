@@ -10,12 +10,40 @@ namespace MyMathLib
 
     public class BasisSpline
     {
-        Grid grid;
+        public Grid grid;
+        private Vector C;
+        private int degree;
         BasisSplineType type;
-        public const double EPS = 0.000000000001d;
+        public const double EPS = 0.00000001d;
+
+        public BasisSpline(int deg,Grid x_knots,Vector y_knots)
+        {
+            degree = deg;
+            grid = new Grid(degree, x_knots, x_knots.Left, x_knots.Right);
+            C = Interpolate(y_knots, grid, deg);
+        }
 
 
+        private static Vector Interpolate(Vector y_knots,Grid grid, int deg)
+        {
+            Matrix A = DeBoorMethods.SlowCreateInterpolationMatrix(grid, deg);
+            Vector coefs = Solver.BCGSTAB(A, y_knots, EPS);
 
+            return coefs;
+        }
+
+        public double SlowCalculateSpline(double x)
+        {
+            double S = 0d;
+            double B = 0;
+
+            for (int i = 0; i < C.Length; i++)
+            {
+                B = DeBoorMethods.DeBoorB(x, grid, degree, i);
+                S += C[i] * B;
+            }
+            return S;
+        }
 
         public class DeBoorMethods
         {
@@ -66,19 +94,7 @@ namespace MyMathLib
                 return b[find - index]; 
             }
 
-            /**
- * Create the basis splines for order requested at a particular value of x.
- * From "A Practical Guide To Splines - Revised Edition" by Carl de Boor p 111
- * the algorithm for BSPLVB. The value of the spline coefficients can be calculated
- * based on a cool recursion. This is a simplified and numerically stable algorithm
- * that seems to be the basis of most bspline implementations including gsl, matlab,etc.
- * @param all_knots - Original knots vector augmented with order number of endpoints
- * @param n_knots - Total number of knots.
- * @param order - Order or order of polynomials, 4 for cubic splines.
- * @param i - index of value x in knots such that all_knots[i] <= x && all_knots[i+1] > x
- * @param x - value that we want to evaluate spline at.
- * @param b - memory to write our coefficients into, must be at least order long.
- */
+         
             public static Vector  basis_spline(double x, Grid grid, int deg, int index)
             {
                 int n_knots = grid.Count;
@@ -191,6 +207,20 @@ namespace MyMathLib
                     f[i] = DeBoorB(a_border + i * h,tau,deg,index);
                 }
                 return f;
+            }
+
+            public static Matrix SlowCreateInterpolationMatrix(Grid tau, int deg)
+            {
+                Matrix A = new Matrix(tau.Dimetion);
+
+                for (int i = 0; i < tau.Dimetion; i++)
+                {
+                    for (int j = 0; j < tau.Dimetion; j++)
+                    {
+                        A[i, j] = DeBoorB(tau.GetOrigin(i), tau, deg, j);
+                    }
+                }
+                return A;
             }
         }
     }

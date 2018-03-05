@@ -144,6 +144,11 @@ namespace MyMathLib
         }
 
 
+        public double GetOrigin(int index)
+        {
+            return originGrid[index];
+        }
+
 
         public static List<double> CreateUniformGrid(int GridSize,double a, double b)
         {
