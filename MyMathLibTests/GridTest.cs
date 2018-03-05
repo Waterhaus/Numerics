@@ -225,5 +225,29 @@ namespace MyMathLibTests
 
         }
 
+        [TestMethod]
+        public void CreateNewBasisSplineGrid_CountMustbe11()
+        {
+            //enter data
+            int deg = 4;
+            int GridSize = 7;
+            double a = 0;
+            double b = 1;
+
+            MyMathLib.Grid knots = new MyMathLib.Grid(GridSize, a,b);
+            
+
+            int expect = 11;
+            //code
+            MyMathLib.Grid tau = new MyMathLib.Grid(deg, knots, a, b);
+            int actual = tau.Count;
+            Console.WriteLine(tau.ToString());
+            Console.WriteLine(tau.ToStringOrigin());
+            //compare
+            Assert.AreEqual(expect, actual, "Неверный расчет сетки для базисного сплайна");
+
+         
+        }
+
     }
     }

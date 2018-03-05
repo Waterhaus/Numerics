@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace MyMathLib
 {
+    //no test
     public class Solver
     {
         public static Vector BCG(Matrix A, Vector b, double EPS)

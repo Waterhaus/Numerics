@@ -15,6 +15,8 @@ namespace MyMathLib
         public const double EPS = 0.000000000001d;
 
 
+
+
         public class DeBoorMethods
         {
             //fast calculation
