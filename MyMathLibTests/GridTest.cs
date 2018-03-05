@@ -126,5 +126,104 @@ namespace MyMathLibTests
             Assert.AreEqual(expect, j + 1, "Не достаточно одинаковых элементов в конце");
         }
 
+        [TestMethod]
+        public void BeginEndIndex1()
+        {
+            //setup
+            int deg = 4;
+            MyMathLib.Grid grid = new MyMathLib.Grid(deg, 10, 0, 1);
+
+            double left_exp = 0;
+            double right_exp = 1d;
+
+            //run
+            double left_act = grid[grid.BeginIndex];
+            double right_act = grid[grid.EndIndex];
+
+            //cc
+            Assert.AreEqual(left_exp, left_act, 0.00000000001d, "left non nono non");
+
+            Assert.AreEqual(right_exp, right_act, 0.00000000001d, "left non nono non");
+
+        }
+
+        [TestMethod]
+        public void BeginEndIndex2()
+        {
+            //setup
+            int deg = 3;
+            MyMathLib.Grid grid = new MyMathLib.Grid(deg, 10, 0, 1);
+
+           
+
+            //run
+            double left = grid[grid.BeginIndex];
+            double rleft = grid[grid.BeginIndex + 1];
+            bool flag = rleft - left > 0;
+            //cc
+            Assert.AreEqual(true, flag,"NE TRUE");
+
+           
+
+        }
+        [TestMethod]
+        public void BeginEndIndex2_2()
+        {
+            //setup
+            int deg = 4;
+            MyMathLib.Grid grid = new MyMathLib.Grid(deg, 10, 0, 1);
+
+
+
+            //run
+            double left = grid[grid.BeginIndex];
+            double rleft = grid[grid.BeginIndex + 1];
+            bool flag = rleft - left > 0;
+            //cc
+            Assert.AreEqual(true, flag, "NE TRUE");
+
+
+
+        }
+
+        [TestMethod]
+        public void BeginEndIndex3()
+        {
+            //setup
+            int deg = 3;
+            MyMathLib.Grid grid = new MyMathLib.Grid(deg, 10, 0, 1);
+
+
+
+            //run
+            double right = grid[grid.EndIndex];
+            double lright = grid[grid.EndIndex - 1];
+            bool flag = right - lright > 0;
+            //cc
+            Assert.AreEqual(true, flag, "NE TRUE");
+
+
+
+        }
+        [TestMethod]
+        public void BeginEndIndex3_2()
+        {
+            //setup
+            int deg = 4;
+            MyMathLib.Grid grid = new MyMathLib.Grid(deg, 10, 0, 1);
+
+
+
+            //run
+            double right = grid[grid.EndIndex];
+            double lright = grid[grid.EndIndex - 1];
+            bool flag = right - lright > 0;
+            //cc
+            Assert.AreEqual(true, flag, "NE TRUE");
+
+
+
+        }
+
     }
     }

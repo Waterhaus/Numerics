@@ -16,6 +16,7 @@ namespace MyMathLib
         private double a_border;
         private double b_border;
         private int dim;
+       
         public GridType Type;
 
 
@@ -45,6 +46,26 @@ namespace MyMathLib
         public double Right
         {
             get { return b_border; }
+        }
+
+        public int BeginIndex
+        {
+            get
+            {
+                if (degree % 2 == 0)
+                    return degree / 2;
+
+                else
+                    return degree / 2 + 1;
+            }
+        }
+
+        public int EndIndex
+        {
+            get
+            {
+                return dim + BeginIndex - 1;
+            }
         }
 
         public Grid()
@@ -123,6 +144,7 @@ namespace MyMathLib
             get
             {
                 return extendetGrid[i];
+                
             }
             //Метод доступа для установки
             /*
@@ -217,11 +239,16 @@ namespace MyMathLib
 
         public int Find(double x)
         {
+            double EPS = 0.00000001d;
             if (x < extendetGrid[0] || x > extendetGrid[extendetGrid.Count - 1]) throw new ArgumentException("Точка х вне границ отрезка!");
-            for(int index = 0; index < extendetGrid.Count; index++)
+
+            for (int index = BeginIndex; index < EndIndex; index++)
             {
                 if (x >= extendetGrid[index] && x < extendetGrid[index + 1]) return index;
             }
+
+            if (x.Equals(extendetGrid[EndIndex])) return EndIndex - 1;
+
             return -1;
         }
     }

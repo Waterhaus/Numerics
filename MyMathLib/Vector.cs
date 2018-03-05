@@ -36,6 +36,14 @@ namespace MyMathLib
             }
         }
 
+        public double[] ToArray
+        {
+            get
+            {
+                return v;
+            }
+
+        }
 
 
         public Vector()

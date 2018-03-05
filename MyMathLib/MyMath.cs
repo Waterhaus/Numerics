@@ -60,6 +60,19 @@ namespace MyMathLib
                 return (b_border - a_border) / (GridSize - 1);
             }
 
+            //no tests
+            public static Vector GetVectorFunction(int GridSize, double a_border, double b_border, FunctionLib.Function F)
+            {
+                Vector f = new Vector(GridSize);
+                double h = GetStep(GridSize, a_border, b_border);
+
+                for (int i = 0; i < GridSize; i++)
+                {
+                    f[i] = F(a_border + i * h);
+                }
+                return f;
+            }
+
         }
 
       
