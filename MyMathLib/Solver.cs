@@ -115,7 +115,7 @@ namespace MyMathLib
             if (Math.Abs(rho) > 0)
                 for (int j = 0; ; j++)
                 {
-                    Console.WriteLine(x.ToString());
+                    //Console.WriteLine(x.ToString());
                     /*1*/
                     rho = MyMath.Basic.skal(rr, r);
                     if (rho == 0) { Console.WriteLine("При данном rr0 метод не сходится "); break; }

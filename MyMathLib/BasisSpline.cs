@@ -16,6 +16,11 @@ namespace MyMathLib
         BasisSplineType type;
         public const double EPS = 0.00000001d;
 
+        public Vector COEFICIENT
+        {
+            get { return C; }
+        }
+
         public BasisSpline(int deg,Grid x_knots,Vector y_knots)
         {
             degree = deg;
@@ -23,12 +28,23 @@ namespace MyMathLib
             C = Interpolate(y_knots, grid, deg);
         }
 
+        public Vector GetAllBasis(double x)
+        {
+            Vector B = new Vector(grid.Dimetion);
+
+            for (int i = 0; i < B.Length; i++)
+            {
+                B[i] = DeBoorMethods.DeBoorB(x, grid, degree, i);
+            }
+            return B;
+        }
 
         private static Vector Interpolate(Vector y_knots,Grid grid, int deg)
         {
+            if (deg == 2) return y_knots;
             Matrix A = DeBoorMethods.SlowCreateInterpolationMatrix(grid, deg);
             Vector coefs = Solver.BCGSTAB(A, y_knots, EPS);
-
+            Console.WriteLine(A.ToString());
             return coefs;
         }
 
@@ -43,6 +59,18 @@ namespace MyMathLib
                 S += C[i] * B;
             }
             return S;
+        }
+
+        public Vector GetVectorFunction(int GridSize, double a_border, double b_border)
+        {
+            Vector f = new Vector(GridSize);
+            double h = MyMath.Basic.GetStep(GridSize, a_border, b_border);
+
+            for (int i = 0; i < GridSize; i++)
+            {
+                f[i] = SlowCalculateSpline(a_border + i * h);
+            }
+            return f;
         }
 
         public class DeBoorMethods
@@ -189,7 +217,7 @@ namespace MyMathLib
                 if (index < J || index > J + p) return 0; //если не в suppBj от 0
                
                 if (index == tau.BeginIndex && Math.Abs(x - tau.Left) < EPS) return 1d;
-                if (index == tau.EndIndex &&  Math.Abs(x - tau.Right) < EPS) return 1d;
+                if (index == tau.Count - 1 &&  Math.Abs(x - tau.Right) < EPS) return 1d;
 
                 Vector b = basis_spline(x, tau, deg, J);
 

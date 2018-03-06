@@ -40,5 +40,15 @@ namespace MyMathLib
             return Math.Sin(t);
         }
 
+        public static double tsin(double t)
+        {
+            return t * Math.Sin(t);
+        }
+
+
+        public static double tttsin(double t)
+        {
+            return t * t * t * Math.Sin(t);
+        }
     }
 }

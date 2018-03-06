@@ -55,6 +55,7 @@
     <Compile Include="BasisSplineTest.cs" />
     <Compile Include="BsplineExperiment.cs" />
     <Compile Include="GridTest.cs" />
+    <Compile Include="InterpolationTestcs.cs" />
     <Compile Include="MyMathBasicTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VectorClassTest.cs" />

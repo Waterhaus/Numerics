@@ -57,6 +57,23 @@ namespace MyMathLib
             //comp
             Assert.AreEqual(expect, actual, EPS, "Должно обращаться в этой точке в 1");
         }
+
+        [TestMethod]
+        public void DeBoorB_3_6_return0()
+        {
+            int deg = 4;
+
+            Grid grid = new Grid(10, 0, 3);
+            Grid tau = new Grid(deg, grid, 0, 3);
+
+            double expect = 0d;
+            double EPS = 0.00001d;
+            //run
+            double actual = BasisSpline.DeBoorMethods.DeBoorB(3d, tau, deg, 6);
+
+            //comp
+            Assert.AreEqual(expect, actual, EPS, "Должно обращаться в этой точке в 1");
+        }
     }
     
     
