@@ -9,6 +9,7 @@ namespace MyMathLib
     public class FunctionLib
     {
         public delegate double Function(double t);
+        public delegate object UniFunction(object t);
         public delegate double MyFunctionDoubleDelegate(params object[] args);
 
         public static double polinom_deg3_1(double t)

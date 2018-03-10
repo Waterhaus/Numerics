@@ -18,8 +18,8 @@ namespace MyMathLib.MultyGrid
             public double EPS = 0.001d;
             public int level;
             public Vector z;
-
-
+            public FunctionLib.UniFunction equation;
+            public FunctionLib.UniFunction solver;
 
             public MGM_in(Vector f, int NU, double step)
             {
@@ -117,20 +117,23 @@ namespace MyMathLib.MultyGrid
             Vector z = new Vector(setup.N);
             Vector e_h;
             Vector d_temp;
+            Vector Az;
             do
             {
                 for (int k = 0; k < setup.nu; k++)
                 {
-                    d_temp = DifEquation.multiplyD2U(z) - setup.b;
+                    Az = (Vector)setup.equation(z);
+                    d_temp = Az - setup.b;
                     z = z - W * d_temp;
                 }
 
                 //проектирование ошибки
-                Vector d_h = DifEquation.multiplyD2U(z) - setup.b;
+                Az = (Vector)setup.equation(z);
+                Vector d_h = Az - setup.b;
                 Vector d_2h = Proektor.basic_r(d_h);
 
                 //решаем систему на грубой сетке прогонкой
-                Vector e_2h = DifEquation.solveD2U(d_2h);
+                Vector e_2h = (Vector)setup.solver(d_2h);
 
                 //продолжаем на исходную сетку 
                 e_h = Resumption.basic_p(e_2h);
