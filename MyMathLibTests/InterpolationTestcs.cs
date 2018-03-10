@@ -13,7 +13,7 @@ namespace MyMathLib
             double EPS = 0.1d;
             double a = 0d;
             double b = 3d;
-            int GridSize = 10;
+            int GridSize = 20;
             int deg = 2;
             Grid grid = new Grid(GridSize, a, b);
             Vector y = MyMath.Basic.GetVectorFunction(GridSize, a, b, FunctionLib.tsin);
@@ -36,6 +36,8 @@ namespace MyMathLib
             Assert.AreEqual(0, result, EPS, "Плохая интерполяция!");
 
         }
+
+        
 
         [TestMethod]
         public void Interpolate_slow_deg4_tsin()

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MyMathLib
 {
-    enum BasisSplineType { DeBoor, Kalitkin}
+    enum BasisSplineType { DeBoor, Kalitkin }
 
     public class BasisSpline
     {
@@ -21,7 +21,7 @@ namespace MyMathLib
             get { return C; }
         }
 
-        public BasisSpline(int deg,Grid x_knots,Vector y_knots)
+        public BasisSpline(int deg, Grid x_knots, Vector y_knots)
         {
             degree = deg;
             grid = new Grid(degree, x_knots, x_knots.Left, x_knots.Right);
@@ -39,7 +39,7 @@ namespace MyMathLib
             return B;
         }
 
-        private static Vector Interpolate(Vector y_knots,Grid grid, int deg)
+        private static Vector Interpolate(Vector y_knots, Grid grid, int deg)
         {
             if (deg == 2) return y_knots;
             Matrix A = DeBoorMethods.SlowCreateInterpolationMatrix(grid, deg);
@@ -61,6 +61,29 @@ namespace MyMathLib
             return S;
         }
 
+        public double FastCalculateSpline(double x)
+        {
+            double S = 0d;
+            double B = 0;
+            if (x < grid.Left || x > grid.Right) return 0;  //если не лежит в отрезке то 0
+            int J = grid.Find(x);
+            int p = degree - 1;
+            int index = J - grid.BeginIndex;
+
+            if (Math.Abs(x - grid.Left) < EPS) return C[0];
+            if (Math.Abs(x - grid.Right) < EPS) return C.Last;
+
+            Vector b = DeBoorMethods.bsplv(x, grid, degree, J);
+
+            for (int i = 0; i < degree && index + i < C.Length; i++)
+            {
+                S += C[index + i] * b[i];
+            }
+
+
+            return S;
+        }
+
         public Vector GetVectorFunction(int GridSize, double a_border, double b_border)
         {
             Vector f = new Vector(GridSize);
@@ -68,62 +91,28 @@ namespace MyMathLib
 
             for (int i = 0; i < GridSize; i++)
             {
-                f[i] = SlowCalculateSpline(a_border + i * h);
+                f[i] = FastCalculateSpline(a_border + i * h);
+            }
+            return f;
+        }
+
+        public Vector GetVectorFunction(Grid tau)
+        {
+            Vector f = new Vector(tau.Count);
+
+
+            for (int i = 0; i < f.Length; i++)
+            {
+                f[i] = FastCalculateSpline(tau[i]);
             }
             return f;
         }
 
         public class DeBoorMethods
         {
-            //fast calculation
-            public static double[] BSPLVB(double x, Grid grid, int deg)
-            {
-                int index = grid.Find(x);
 
-                double[] b = new double[deg];
-                double[] copy_b = new double[deg];
-                double[] d_L = new double[deg];
-                double[] d_R = new double[deg];
-                b[0] = 1d;
-                double A, B, temp;
-                A = B = temp = 0;
-                for (int degree = 1; degree <= deg - 1; degree++)
-                {
-                    for (int i = 0; i <= degree; i++)
-                    {
-                        d_L[i] = x - grid[index + i - degree];
-                        d_R[i] = grid[index + i + 1] - x;
-                    }
-
-                    for (int i = 0; i <= degree; i++)
-                    {
-                        A = B = temp = 0;
-                        if (i - 1 >= 0) A = d_L[i] / (d_R[i - 1] + d_L[i]);
-                        if (i + 1 < d_L.Length) B = d_R[i] / (d_R[i] + d_L[i + 1]);
-
-                        if (i - 1 >= 0) temp = A * b[i - 1];
-                        temp += B * b[i];
-                        copy_b[i] = temp;
-
-                    }
-                    for (int r = 0; r < b.Length; r++)
-                        b[r] = copy_b[r];
-                }
-                return b;
-
-            }
-
-
-            public static double getBSplineValue(int index, int find, Vector b)
-            {
-                int deg = b.Length - 2;
-                if (Math.Abs(find - index) > deg) return 0;
-
-                return b[find - index]; 
-            }
-
-         
-            public static Vector  basis_spline(double x, Grid grid, int deg, int index)
+            //подсчет базисных сплайнов
+            public static Vector bsplv(double x, Grid grid, int deg, int index)
             {
                 int n_knots = grid.Count;
                 Vector b = new Vector(deg);
@@ -153,14 +142,14 @@ namespace MyMathLib
             public static double ClassicBasisSpline(double x, Grid grid, int deg, int index)
             {
                 if (index < 0) throw new ArgumentException("Выход за границы массива");
-               
 
-                if(deg == 0)
-                if (x >= grid[index] && x < grid[index + 1])
-                {
-                    return 1;
-                }
-                else return 0;
+
+                if (deg == 0)
+                    if (x >= grid[index] && x < grid[index + 1])
+                    {
+                        return 1;
+                    }
+                    else return 0;
 
                 double C1, C2;
                 C1 = C2 = 0;
@@ -180,9 +169,9 @@ namespace MyMathLib
                     if (temp > 0)
                         C2 = (grid[index + deg + 1] - x) / temp;
                 }
-              
 
-                
+
+
 
                 return C1 * ClassicBasisSpline(x, grid, deg - 1, index) + C2 * ClassicBasisSpline(x, grid, deg - 1, index + 1);
             }
@@ -215,14 +204,43 @@ namespace MyMathLib
 
 
                 if (index < J || index > J + p) return 0; //если не в suppBj от 0
-               
-                if (index == tau.BeginIndex && Math.Abs(x - tau.Left) < EPS) return 1d;
-                if (index == tau.Count - 1 &&  Math.Abs(x - tau.Right) < EPS) return 1d;
 
-                Vector b = basis_spline(x, tau, deg, J);
+                if (index == tau.BeginIndex && Math.Abs(x - tau.Left) < EPS) return 1d;
+                if (index == tau.Count - 1 && Math.Abs(x - tau.Right) < EPS) return 1d;
+
+                Vector b = bsplv(x, tau, deg, J);
 
                 return b[index - J];
-                
+
+            }
+
+            //все ненулевые значения сплайнов в точке x
+            public static Vector DeBoorAllB(double x, Grid tau, int deg, int index)
+            {
+                Vector v = new Vector(deg);
+                if (x < tau.Left || x > tau.Right) return v;  //если не лежит в отрезке то 0
+                int J = tau.Find(x);
+                int p = deg - 1;
+                index = index + tau.BeginIndex;
+
+
+                if (index < J || index > J + p) return v; //если не в suppBj от 0
+
+                if (index == tau.BeginIndex && Math.Abs(x - tau.Left) < EPS)
+                {
+                    v[0] = 1d;
+                    return v;
+                }
+                if (index == tau.Count - 1 && Math.Abs(x - tau.Right) < EPS)
+                {
+                    v[0] = 1d;
+                    return v;
+                }
+
+                Vector b = bsplv(x, tau, deg, J);
+
+                return b;
+
             }
 
             public static Vector GetVectorDeBoorB(int GridSize, double a_border, double b_border, Grid tau, int deg, int index)
@@ -232,7 +250,7 @@ namespace MyMathLib
 
                 for (int i = 0; i < GridSize; i++)
                 {
-                    f[i] = DeBoorB(a_border + i * h,tau,deg,index);
+                    f[i] = DeBoorB(a_border + i * h, tau, deg, index);
                 }
                 return f;
             }

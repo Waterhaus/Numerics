@@ -41,14 +41,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BasisSpline.cs" />
+    <Compile Include="DifEquation.cs" />
     <Compile Include="FunctionStore.cs" />
     <Compile Include="Grid.cs" />
     <Compile Include="Matrix.cs" />
+    <Compile Include="MultyGrid\MultyGridMethod.cs" />
+    <Compile Include="MultyGrid\Proector.cs" />
+    <Compile Include="MultyGrid\Resumption.cs" />
     <Compile Include="MyMath.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Solver.cs" />
     <Compile Include="Vector.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
