@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MyMathLib
 {
-    public enum GridType { Uniform, BSplineStandart, ClassicQubic, ClassicQuadratic, ClassicLinear}
+    public enum GridType { DeBoorBestInterpolation, FixedGridInterpolation }
 
     public class Grid
     {
@@ -70,6 +70,9 @@ namespace MyMathLib
         public Grid()
         {
             extendetGrid = null;
+            originGrid = null;
+            endIndex = beginIndex = 0;
+            dim = 0;
             degree = 0;
             a_border = b_border = 0;
         }
@@ -80,6 +83,7 @@ namespace MyMathLib
             b_border = b;
             degree = 0;
             extendetGrid = CreateUniformGrid(GridSize, a, b);
+            originGrid = new List<double>(extendetGrid);
             dim = GridSize;
 
             beginIndex = FindBeginIndex(extendetGrid);
@@ -92,6 +96,7 @@ namespace MyMathLib
             b_border = b;
             degree = deg;
             extendetGrid = CreateBSplineClassicGrid(deg,GridSize,a,b);
+            originGrid = CreateUniformGrid(GridSize, a, b);
             dim = GridSize;
 
             beginIndex = FindBeginIndex(extendetGrid);
@@ -104,22 +109,36 @@ namespace MyMathLib
             b_border = tau[tau.Length - 1];
             degree = deg;
             extendetGrid = CreateBSplineClassicGrid(deg, tau);
+            originGrid = new List<double>(tau);
             dim = tau.Length;
 
             beginIndex = FindBeginIndex(extendetGrid);
             endIndex = FindEndIndex(extendetGrid);
         }
 
-        public Grid(int deg, Grid origin, double a, double b)
+        public Grid(int deg, Vector tau)
+        {
+            a_border = tau[0];
+            b_border = tau[tau.Length - 1];
+            degree = deg;
+            extendetGrid = CreateBSplineClassicGrid(deg, tau.ToArray);
+            originGrid = new List<double>(tau.ToArray);
+            dim = tau.Length;
+
+            beginIndex = FindBeginIndex(extendetGrid);
+            endIndex = FindEndIndex(extendetGrid);
+        }
+
+        public Grid(int deg, Vector origin, double a, double b)
         {
             a_border = a;
             b_border = b;
             degree = deg;
-            dim = origin.Count;
+            dim = origin.Length;
 
             int GridSize = dim - degree + 2;
             extendetGrid = CreateNewBasisSplineGrid(deg, GridSize, a, b);
-            originGrid = origin.extendetGrid;
+            originGrid = new List<double>(origin.ToArray);
             
 
             beginIndex = FindBeginIndex(extendetGrid);
@@ -147,6 +166,15 @@ namespace MyMathLib
         public double GetOrigin(int index)
         {
             return originGrid[index];
+        }
+        public double[] GetOriginArray()
+        {
+            return originGrid.ToArray();
+        }
+
+        public double[] ToArray()
+        {
+            return extendetGrid.ToArray();
         }
 
 

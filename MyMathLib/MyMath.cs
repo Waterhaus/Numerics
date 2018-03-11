@@ -83,6 +83,17 @@ namespace MyMathLib
                 }
                 return S;
             }
+
+            public static double[] CreateUniformGrid(int GridSize, double a, double b)
+            {
+                double[] grid = new double[GridSize];
+                double h = GetStep(GridSize, a, b);
+
+                for (int i = 0; i < GridSize; i++)
+                    grid[i] =  a + i * h;
+
+                return grid;
+            }
         }
 
       

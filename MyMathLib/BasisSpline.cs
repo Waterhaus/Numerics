@@ -21,10 +21,10 @@ namespace MyMathLib
             get { return C; }
         }
 
-        public BasisSpline(int deg, Grid x_knots, Vector y_knots)
+        public BasisSpline(int deg, Vector x_knots, Vector y_knots)
         {
             degree = deg;
-            grid = new Grid(degree, x_knots, x_knots.Left, x_knots.Right);
+            grid = new Grid(degree, x_knots, x_knots[0], x_knots.Last);
             C = Interpolate(y_knots, grid, deg);
         }
 
@@ -44,8 +44,13 @@ namespace MyMathLib
             if (deg == 2) return y_knots;
             Matrix A = DeBoorMethods.SlowCreateInterpolationMatrix(grid, deg);
             Vector coefs = Solver.BCGSTAB(A, y_knots, EPS);
-            Console.WriteLine(A.ToString());
+            
             return coefs;
+        }
+
+        public Matrix GetMatrix()
+        {
+            return DeBoorMethods.SlowCreateInterpolationMatrix(grid, degree);
         }
 
         public double SlowCalculateSpline(double x)
@@ -104,6 +109,30 @@ namespace MyMathLib
             for (int i = 0; i < f.Length; i++)
             {
                 f[i] = FastCalculateSpline(tau[i]);
+            }
+            return f;
+        }
+
+        public Vector GetVectorFunction(Vector x_knots)
+        {
+            Vector f = new Vector(x_knots.Length);
+
+
+            for (int i = 0; i < f.Length; i++)
+            {
+                f[i] = FastCalculateSpline(x_knots[i]);
+            }
+            return f;
+        }
+
+        public Vector GetVectorBasis(Vector x_knots,int index)
+        {
+            Vector f = new Vector(x_knots.Length);
+
+
+            for (int i = 0; i < f.Length; i++)
+            {
+                f[i] = DeBoorMethods.DeBoorB(x_knots[i], grid, degree, index);
             }
             return f;
         }
@@ -179,19 +208,7 @@ namespace MyMathLib
             //основан на рекурсивном методе
             public static double StandartB(double x, Grid tau, int index)
             {
-                switch (tau.Type)
-                {
-                    case GridType.ClassicQubic:
-                        return ClassicBasisSpline(x, tau, 3, index);
-
-                    case GridType.ClassicQuadratic:
-                        return ClassicBasisSpline(x, tau, 2, index);
-
-                    case GridType.ClassicLinear:
-                        return ClassicBasisSpline(x, tau, 1, index);
-
-                }
-                return 0;
+                return ClassicBasisSpline(x, tau, tau.SplineDegree - 1, index);  
             }
 
             //основан на bsplvb

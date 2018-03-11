@@ -234,7 +234,7 @@ namespace MyMathLibTests
             double a = 0;
             double b = 1;
 
-            MyMathLib.Grid knots = new MyMathLib.Grid(GridSize, a,b);
+            MyMathLib.Vector knots = MyMathLib.Vector.CreateUniformGrid(GridSize, a,b);
             
 
             int expect = 11;

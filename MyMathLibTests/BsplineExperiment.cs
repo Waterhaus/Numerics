@@ -63,7 +63,7 @@ namespace MyMathLib
         {
             int deg = 4;
 
-            Grid grid = new Grid(10, 0, 3);
+            Vector grid = Vector.CreateUniformGrid(10, 0, 3);
             Grid tau = new Grid(deg, grid, 0, 3);
 
             double expect = 0d;

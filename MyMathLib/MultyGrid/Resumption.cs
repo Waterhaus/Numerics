@@ -29,6 +29,16 @@ namespace MyMathLib.MultyGrid
             return v_h;
         }
 
+        public static Vector spline4_p(Vector v_2h)
+        {
+            Vector v_h = new Vector(2 * v_2h.Length);
+
+
+
+            return v_h;
+
+        }
+
     }
 }
 

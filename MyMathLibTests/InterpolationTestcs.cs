@@ -15,7 +15,7 @@ namespace MyMathLib
             double b = 3d;
             int GridSize = 20;
             int deg = 2;
-            Grid grid = new Grid(GridSize, a, b);
+            Vector grid = Vector.CreateUniformGrid(GridSize, a, b);
             Vector y = MyMath.Basic.GetVectorFunction(GridSize, a, b, FunctionLib.tsin);
 
             //run
@@ -48,7 +48,7 @@ namespace MyMathLib
             double b = 3d;
             int GridSize = 10;
             int deg = 4;
-            Grid grid = new Grid(GridSize, a, b);
+            Vector grid = Vector.CreateUniformGrid(GridSize, a, b);
             Vector y = MyMath.Basic.GetVectorFunction(GridSize, a, b, FunctionLib.tsin);
 
             //run
@@ -79,7 +79,7 @@ namespace MyMathLib
             double b = 3d;
             int GridSize = 15;
             int deg = 4;
-            Grid grid = new Grid(GridSize, a, b);
+            Vector grid = Vector.CreateUniformGrid(GridSize, a, b);
             Vector y = MyMath.Basic.GetVectorFunction(GridSize, a, b, FunctionLib.tttsin);
 
             //run
@@ -110,7 +110,7 @@ namespace MyMathLib
             double b = 3d;
             int GridSize = 15;
             int deg = 6;
-            Grid grid = new Grid(GridSize, a, b);
+            Vector grid = Vector.CreateUniformGrid(GridSize, a, b);
             Vector y = MyMath.Basic.GetVectorFunction(GridSize, a, b, FunctionLib.tttsin);
 
             //run

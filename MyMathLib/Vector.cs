@@ -231,6 +231,11 @@ namespace MyMathLib
 
             return v;
         }
+
+        public static Vector CreateUniformGrid(int GridSize, double a, double b)
+        {
+            return new Vector(MyMath.Basic.CreateUniformGrid(GridSize, a, b));
+        }
     }
 
 }
