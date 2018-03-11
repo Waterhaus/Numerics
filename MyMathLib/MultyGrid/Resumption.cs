@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace MyMathLib.MultyGrid
 {
-    class Resumption
+    public class Resumption
     {
         public static Vector basic_p(Vector v_2h)
         {
-            Vector v_h = new Vector(2 * v_2h.Length - 1);
+            Vector v_h = new Vector(2 * v_2h.Length);
             int k = 0;
-            for (int i = 0; i < v_h.Length; i++)
+            for (int i = 0; i < v_h.Length - 1; i++)
             {
                 if (i % 2 == 0)
                 {
@@ -25,6 +25,7 @@ namespace MyMathLib.MultyGrid
                 }
 
             }
+            v_h.Last = v_2h.Last;
             return v_h;
         }
 

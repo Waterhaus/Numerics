@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MyMathLib.MultyGrid
 {
-    class Proektor
+    public class Proektor
     {
 
         public static Vector basic_r(Vector v_h)
@@ -29,6 +29,7 @@ namespace MyMathLib.MultyGrid
                 v_2h[i] = (1d / 4d) * v_h[k - 1] + (1d / 2d) * v_h[k];
                 if (k + 1 < v_h.Length) v_2h[i] += (1d / 4d) * v_h[k + 1];
             }
+            v_2h[0] = v_h[0];
             return v_2h;
 
         }
