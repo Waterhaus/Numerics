@@ -19,7 +19,7 @@ namespace MyMathLib
             Vector y = MyMath.Basic.GetVectorFunction(GridSize, a, b, FunctionLib.tsin);
 
             //run
-            BasisSpline bspline = new BasisSpline(deg, grid, y);
+            BasisSpline bspline = new BasisSpline(deg, grid, y,GridType.ClassicSplineGrid);
 
             //compare
             int N = 150;
@@ -52,7 +52,7 @@ namespace MyMathLib
             Vector y = MyMath.Basic.GetVectorFunction(GridSize, a, b, FunctionLib.tsin);
 
             //run
-            BasisSpline bspline = new BasisSpline(deg, grid, y);
+            BasisSpline bspline = new BasisSpline(deg, grid, y,GridType.ClassicSplineGrid);
 
             //compare
             int N = 150;
@@ -83,7 +83,7 @@ namespace MyMathLib
             Vector y = MyMath.Basic.GetVectorFunction(GridSize, a, b, FunctionLib.tttsin);
 
             //run
-            BasisSpline bspline = new BasisSpline(deg, grid, y);
+            BasisSpline bspline = new BasisSpline(deg, grid, y,GridType.ClassicSplineGrid);
 
             //compare
             int N = 150;
@@ -114,7 +114,7 @@ namespace MyMathLib
             Vector y = MyMath.Basic.GetVectorFunction(GridSize, a, b, FunctionLib.tttsin);
 
             //run
-            BasisSpline bspline = new BasisSpline(deg, grid, y);
+            BasisSpline bspline = new BasisSpline(deg, grid, y,GridType.ClassicSplineGrid);
 
             //compare
             int N = 150;

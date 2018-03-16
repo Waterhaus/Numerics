@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MyMathLib
 {
-    public enum GridType { DeBoorBestInterpolation, FixedGridInterpolation }
+    public enum GridType { ClassicSplineGrid, UniformSplineGrid }
 
     public class Grid
     {
@@ -20,7 +20,7 @@ namespace MyMathLib
         private int beginIndex;
         private int endIndex;
        
-        public GridType Type;
+        public GridType gridType;
 
 
         public int SplineDegree
@@ -177,6 +177,34 @@ namespace MyMathLib
             return extendetGrid.ToArray();
         }
 
+        public void ToClassicSplineGrid()
+        {
+            gridType = GridType.ClassicSplineGrid;
+            extendetGrid.Clear();
+
+
+            int GridSize = dim - degree + 2;
+            extendetGrid = CreateNewBasisSplineGrid(degree, GridSize, a_border, b_border);
+
+
+            beginIndex = FindBeginIndex(extendetGrid);
+            endIndex = FindEndIndex(extendetGrid);
+        }
+
+        public void ToUniformSplineGrid()
+        {
+            gridType = GridType.UniformSplineGrid;
+            extendetGrid.Clear();
+
+            int p1 = degree / 2;
+            int p2 = p1;
+            if (p1 + p2 < degree) p1 = p1 + 1;
+            extendetGrid = new List<double>(originGrid);
+            Expend(p1, p2, ref extendetGrid);
+
+            beginIndex = FindBeginIndex(extendetGrid);
+            endIndex = FindEndIndex(extendetGrid);
+        }
 
         public static List<double> CreateUniformGrid(int GridSize,double a, double b)
         {

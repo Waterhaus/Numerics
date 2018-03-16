@@ -21,12 +21,26 @@ namespace MyMathLib
             get { return C; }
         }
 
-        public BasisSpline(int deg, Vector x_knots, Vector y_knots)
+        public BasisSpline(int deg, Vector x_knots, Vector y_knots, GridType gridType)
         {
             degree = deg;
             grid = new Grid(degree, x_knots, x_knots[0], x_knots.Last);
+            switch (gridType)
+            {
+                case GridType.ClassicSplineGrid:
+                    grid.ToClassicSplineGrid();
+                    break;
+                case GridType.UniformSplineGrid:
+                    grid.ToUniformSplineGrid();
+                    break;
+                default:
+                    break;
+            }
+            Console.WriteLine("grid = " +  grid.ToString() );
             C = Interpolate(y_knots, grid, deg);
         }
+
+        
 
         public Vector GetAllBasis(double x)
         {
