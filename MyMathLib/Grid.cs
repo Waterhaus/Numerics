@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MyMathLib
 {
-    public enum GridType { ClassicSplineGrid, UniformSplineGrid }
+    public enum GridType { ClassicSplineGrid, UniformSplineGrid, ExperimentSplineGrid }
 
     public class Grid
     {
@@ -202,6 +202,20 @@ namespace MyMathLib
             extendetGrid = new List<double>(originGrid);
             Expend(p1, p2, ref extendetGrid);
 
+            beginIndex = FindBeginIndex(extendetGrid);
+            endIndex = FindEndIndex(extendetGrid);
+        }
+        public void ToExperimentSplineGrid()
+        {
+            gridType = GridType.UniformSplineGrid;
+            extendetGrid.Clear();
+
+            int p1 = degree / 2;
+            int p2 = p1;
+            if (p1 + p2 < degree) p1 = p1 + 1;
+            extendetGrid = new List<double>(originGrid);
+            Expend(p1, p2, ref extendetGrid);
+            extendetGrid[3] = extendetGrid[4];
             beginIndex = FindBeginIndex(extendetGrid);
             endIndex = FindEndIndex(extendetGrid);
         }

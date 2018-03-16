@@ -33,6 +33,9 @@ namespace MyMathLib
                 case GridType.UniformSplineGrid:
                     grid.ToUniformSplineGrid();
                     break;
+                case GridType.ExperimentSplineGrid:
+                    grid.ToExperimentSplineGrid();
+                    break;
                 default:
                     break;
             }

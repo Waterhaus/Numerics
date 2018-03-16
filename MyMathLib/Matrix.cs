@@ -527,11 +527,12 @@ namespace MyMathLib
         public static Matrix transpose(Matrix A)
         {
             int n = A.Length.n;
-            Matrix B = new Matrix(n);
+            int m = A.Length.m;
+            Matrix B = new Matrix(A.Length.m,A.Length.n);
 
             for (int i = 0; i < n; i++)
-                for (int j = 0; j < n; j++)
-                    B[i, j] = A[j, i];
+                for (int j = 0; j < m; j++)
+                    B[j, i] = A[i, j];
 
             return B;
         }
