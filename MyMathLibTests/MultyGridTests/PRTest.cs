@@ -21,6 +21,52 @@ namespace MyMathLib
         }
 
         [TestMethod]
+        public void create_proection_spline4_mat_test()
+        {
+            //setup
+            //setup
+            int N = 17;
+            int n = 10;
+            double a = 0d;
+            double b = 1d;
+            int index = 0;
+            Vector grid_h = Vector.CreateUniformGrid(N, a, b);
+            Vector grid_2h = Vector.CreateUniformGrid(n, a, b);
+
+
+            BasisSpline spline_h = new BasisSpline(4, grid_h, Vector.GetConstVector(2d, N), GridType.ClassicSplineGrid);
+            BasisSpline spline_2h = new BasisSpline(4, grid_2h, Vector.GetConstVector(2d, n), GridType.ClassicSplineGrid);
+
+            Matrix A = spline_h.GetMatrix();
+            Matrix B = new Matrix(n, N);
+            Vector z;
+            Vector c;
+            //run
+            for (index = 0; index < n; index++)
+            {
+                z = spline_2h.GetVectorBasis(grid_h, index);
+                c = Solver.BCGSTAB(A, z, 0.0000000001d);
+                for (int i = 0; i < N; i++)
+                {
+                    B[index, i] = c[i];
+                }
+            }
+
+
+
+            //run
+            Matrix CREATE_B = MultyGrid.Proektor.create_proection_spline4_mat(n);
+
+            Matrix D = B - CREATE_B;
+            double actual = D.NORMF;
+            Console.WriteLine("полученная " + B.ToString());
+            Console.WriteLine("созданная "+ CREATE_B.ToString());
+            //compare
+            Assert.AreEqual(0d, actual, 0.00000001d, "Эти матрицы не равны!");
+
+        }
+
+        [TestMethod]
         public void basic_r_norm_safe_test()
         {
             //setup

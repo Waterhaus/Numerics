@@ -29,6 +29,11 @@ namespace MyMathLib
             }
         }
 
+        public double NORMF
+        {
+            get { return VecNorm(2d); }
+        }
+
         public Matrix()
         {
             M = new double[1, 1];
@@ -107,6 +112,19 @@ namespace MyMathLib
             {
                 M[i, j] = value;
             }
+        }
+
+        public double VecNorm(double p)
+        {
+            double S = 0d;
+            for (int i = 0; i < n; i++)
+            {
+                for (int j = 0; j < m; j++)
+                {
+                    S += Math.Pow(M[i, j], p);
+                }
+            }
+            return Math.Pow(S, 1d / p);
         }
 
         public bool EqualLength(Matrix B)
@@ -234,6 +252,20 @@ namespace MyMathLib
                 for (int j = 0; j < m; j++)
                 {
                     S += M[i, j].ToString("0.000") + ", ";
+                }
+                S += ">, " + Environment.NewLine;
+            }
+            S += " };";
+            return S;
+        }
+        public string ToString(string s)
+        {
+            string S = " { " + Environment.NewLine + "";
+            for (int i = 0; i < n; i++)
+            {
+                for (int j = 0; j < m; j++)
+                {
+                    S += M[i, j].ToString(s) + ", ";
                 }
                 S += ">, " + Environment.NewLine;
             }

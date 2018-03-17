@@ -112,6 +112,20 @@ namespace MyMathLib
 
 
         [TestMethod]
+        public void Spline4_Experiment5()
+        {
+            Matrix A = new Matrix(3);
+
+            for (int i = 0; i < 3; i++)
+            {
+                A[i, 0] = 1d;
+            }
+            Console.WriteLine(A.ToString());
+        }
+
+        
+
+        [TestMethod]
         public void Spline4_Experiment4()
         {
             //setup
@@ -143,7 +157,7 @@ namespace MyMathLib
             }
 
 
-            Console.WriteLine(Matrix.transpose( B).ToString());
+            Console.WriteLine(Matrix.transpose( B).ToString("0.00"));
             Console.WriteLine("index = " + index);
 
 

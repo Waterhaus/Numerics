@@ -72,5 +72,40 @@ namespace MyMathLib.MultyGrid
 
         }
 
+        public static Matrix create_proection_spline4_mat(int n)
+        {
+            int p = 4;
+            int N = 2 * n - (p - 1);
+
+            Matrix A = new Matrix(n, N);
+            double[] v = { 0.125, 0.5d, 0.75d, 0.5d, 0.125d };
+            double[,] minor = { { 1d, 0.5d, 0d, 0d, 0d, 0d }, { 0d, 0.5d, 0.75d, 0.1875d, 0d, 0d }, { 0d, 0d, 0.25d, 0.6875d, 0.5d, 0.125d } };
+            Matrix M = new Matrix(minor);
+
+            int k = 3;
+            int index = 0;
+            for (int i = 3; i < n - 3; i++)
+            {
+                for (int j = k; j < k + v.Length; j++)
+                {
+                    A[i, j] = v[index];
+                    index++; 
+                }
+                index = 0;
+                k = k + 2;
+            }
+
+            for (int i = 0; i < 3; i++)
+            {
+                for (int j = 0; j < 6; j++)
+                {
+                    A[i, j] = minor[i, j];
+                    A[n - 3 + i, N - 6 + j] = minor[2 - i, 5 - j];
+                }
+            }
+
+            return A;
+        }
+
     }
 }
