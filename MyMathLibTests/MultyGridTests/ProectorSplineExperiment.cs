@@ -17,11 +17,10 @@ namespace MyMathLib
             int index = 0;
             Vector grid_h = Vector.CreateUniformGrid(N, a, b);
             Vector grid_2h = Vector.CreateUniformGrid(n, a, b);
-            
 
-            BasisSpline spline_h = new BasisSpline(4, grid_h, Vector.GetConstVector(2d, N), GridType.ClassicSplineGrid);
-            BasisSpline spline_2h = new BasisSpline(4, grid_2h, Vector.GetConstVector(2d, n), GridType.ClassicSplineGrid);
 
+            BasisSpline spline_h = new BasisSpline(4, N, a, b);
+            BasisSpline spline_2h = spline_h.GetBasisSpline_Down();
             Matrix A = spline_h.GetMatrix();
             Vector z;
             Vector c;

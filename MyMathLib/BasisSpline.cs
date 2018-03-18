@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MyMathLib
 {
-    enum BasisSplineType { DeBoor, Kalitkin }
+    enum BasisSplineType { ForMultyGrid, Basic }
 
     public class BasisSpline
     {
@@ -44,6 +44,37 @@ namespace MyMathLib
         }
 
         
+        public BasisSpline(int deg, int GridSize, double a_border, double b_border)
+        {
+            degree = deg;
+            Vector grid_h = Vector.CreateUniformGrid(GridSize, a_border, b_border);
+            C = new Vector(grid_h.Length);
+            type = BasisSplineType.ForMultyGrid;
+            grid = new Grid(degree, grid_h.ToArray);
+            grid.ToClassicSplineGrid();
+            Console.WriteLine("grid = " + grid.ToString());
+        }
+
+        public BasisSpline GetBasisSpline_Down()
+        {
+            int n = MultyGrid.MultyGridMethod.DownDimentionSpline4(grid.Dimetion);
+            return new BasisSpline(degree, n, grid.Left, grid.Right);
+        }
+
+        public BasisSpline GetBasisSpline_Up()
+        {
+            int N = MultyGrid.MultyGridMethod.UpDimentionSpline4(grid.Dimetion);
+            return new BasisSpline(degree, N, grid.Left, grid.Right);
+        }
+
+        public void SetNewCoefs(Vector c)
+        {
+            if(grid.Dimetion == c.Length)
+            Vector.copy(ref C, c);
+            else Console.WriteLine("Неверное количество коэффициентов для базисных сплайнов");
+        }
+
+
 
         public Vector GetAllBasis(double x)
         {
@@ -56,7 +87,7 @@ namespace MyMathLib
             return B;
         }
 
-        private static Vector Interpolate(Vector y_knots, Grid grid, int deg)
+        public static Vector Interpolate(Vector y_knots, Grid grid, int deg)
         {
             if (deg == 2) return y_knots;
             Matrix A = DeBoorMethods.SlowCreateInterpolationMatrix(grid, deg);

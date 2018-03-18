@@ -20,6 +20,50 @@ namespace MyMathLib
 
         }
 
+
+        [TestMethod]
+        public void slow_spline4_r_dimention_test()
+        {
+            //setup
+            Vector vec_old = Vector.GetConstVector(1d, 17);
+            Console.WriteLine("old = " + vec_old.ToString());
+            //run
+            Vector vec_new = MultyGrid.Resumption.slow_spline4_p(MultyGrid.Proektor.slow_spline_r(vec_old));
+            Console.WriteLine("new = " + vec_new.ToString());
+            //compare
+            Assert.AreEqual(vec_old.Length, vec_new.Length, "Размерности должны совпадать");
+
+        }
+
+        [TestMethod]
+        public void slow_spline4_p_dimention_test()
+        {
+            //setup
+            Vector vec_old = Vector.GetConstVector(1d, 10);
+            Console.WriteLine("old = " + vec_old.ToString());
+            //run
+            Vector vec_new = MultyGrid.Proektor.slow_spline_r(MultyGrid.Resumption.slow_spline4_p(vec_old));
+            Console.WriteLine("new = " + vec_new.ToString());
+            //compare
+            Assert.AreEqual(vec_old.Length, vec_new.Length, "Размерности должны совпадать");
+
+        }
+
+        [TestMethod]
+        public void slow_spline4_p_onevec_test()
+        {
+            //setup
+            Vector vec_old = Vector.GetConstVector(1d, 17);
+            
+            Console.WriteLine("old = " + vec_old.ToString());
+            //run
+            Vector vec_new = MultyGrid.Proektor.slow_spline_r(MultyGrid.Resumption.slow_spline4_p(vec_old));
+            Console.WriteLine("new = " + vec_new.ToString());
+            //compare
+            Assert.AreEqual(0d, (vec_new - vec_old).Norm,0.0001d, "!");
+
+        }
+
         [TestMethod]
         public void create_proection_spline4_mat_test()
         {
@@ -85,6 +129,27 @@ namespace MyMathLib
             Console.WriteLine("new = " + vec_new.ToString());
             //compare
             Assert.AreEqual(Math.Sqrt(h_old)*vec_old.Norm, Math.Sqrt(h_new) * vec_new.Norm,0.0000001d, "Вторая норма не должна меняться");
+
+        }
+        [TestMethod]
+        public void slow_spline4_r_norm_safe_test()
+        {
+            //setup
+            Vector vec_old = Vector.GetConstVector(1d, 64 + 3);
+            double h_old = 1d / 64d;
+            double h_new = 1d / 32d;
+            Console.WriteLine("old = " + vec_old.ToString());
+            //run
+            Vector vec_new = new Vector(64);
+            Vector.copy(ref vec_new, vec_old);
+            for (int i = 0; i < 1; i++)
+            {
+                vec_new = MultyGrid.Proektor.slow_spline_r(vec_new);
+            }
+
+            Console.WriteLine("new = " + vec_new.ToString());
+            //compare
+            Assert.AreEqual(Math.Sqrt(h_old) * vec_old.Norm, Math.Sqrt(h_new) * vec_new.Norm, 0.0000001d, "Вторая норма не должна меняться");
 
         }
     }

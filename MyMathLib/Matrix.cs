@@ -165,9 +165,9 @@ namespace MyMathLib
 
         public static Vector operator *(Matrix A, Vector x)
         {
-            if (A.n == x.Length)
+            if (A.m == x.Length)
             {
-                Vector b = new Vector(A.m);
+                Vector b = new Vector(A.n);
                 //A*x = b
                 for (int i = 0; i < A.Length.n; i++)
                 {
@@ -206,7 +206,7 @@ namespace MyMathLib
             for (int j = 0; j < A.n; j++)
             {
                 for (int i = 0; i < A.m; i++)
-                    A[i, j] = a * A[i, j];
+                    A[j, i] = a * A[j, i];
             }
             return A;
 

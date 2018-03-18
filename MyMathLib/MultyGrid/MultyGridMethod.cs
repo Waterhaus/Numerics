@@ -8,6 +8,18 @@ namespace MyMathLib.MultyGrid
 {
     class MultyGridMethod
     {
+        public static int UpDimentionSpline4(int n)
+        {
+            return 2 * n - 3;
+        }
+
+
+        public static int DownDimentionSpline4(int N)
+        {
+            return (N + 3)/2;
+        }
+
+
         public class MGM_in
         {
             public Vector b;

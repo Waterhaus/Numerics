@@ -39,6 +39,17 @@ namespace MyMathLib.MultyGrid
 
         }
 
+        public static Vector slow_spline4_p(Vector v_2h)
+        {
+            int n = v_2h.Length;
+            int N = MultyGrid.MultyGridMethod.UpDimentionSpline4(n);
+
+            Matrix R = Proektor.create_proection_spline4_mat(n);
+            Matrix P = Matrix.transpose(R);
+
+            return P * v_2h;
+        }
+
     }
 }
 

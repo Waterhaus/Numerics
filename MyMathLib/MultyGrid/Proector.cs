@@ -72,13 +72,27 @@ namespace MyMathLib.MultyGrid
 
         }
 
+        
+
+        public static Vector slow_spline_r(Vector v_h)
+        {
+            int n = MultyGrid.MultyGridMethod.DownDimentionSpline4(v_h.Length);
+            
+            Matrix R = 0.5d*create_proection_spline4_mat(n);
+            Vector v_2h = R * v_h;
+
+            return v_2h;
+        }
+
         public static Matrix create_proection_spline4_mat(int n)
         {
             int p = 4;
             int N = 2 * n - (p - 1);
-
+            
             Matrix A = new Matrix(n, N);
-            double[] v = { 0.125, 0.5d, 0.75d, 0.5d, 0.125d };
+            double[] v1 = { 0.125, 0.5d, 0.75d, 0.5d, 0.125d };
+            Vector v = new Vector(v1);
+            
             double[,] minor = { { 1d, 0.5d, 0d, 0d, 0d, 0d }, { 0d, 0.5d, 0.75d, 0.1875d, 0d, 0d }, { 0d, 0d, 0.25d, 0.6875d, 0.5d, 0.125d } };
             Matrix M = new Matrix(minor);
 
