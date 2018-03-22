@@ -54,6 +54,7 @@
   <ItemGroup>
     <Compile Include="BasisSplineTest.cs" />
     <Compile Include="BsplineExperiment.cs" />
+    <Compile Include="ConvolutionTest.cs" />
     <Compile Include="GridTest.cs" />
     <Compile Include="InterpolationTestcs.cs" />
     <Compile Include="MultyGridTests\ProectorSplineExperiment.cs" />

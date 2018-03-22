@@ -51,5 +51,26 @@ namespace MyMathLib
         {
             return t * t * t * Math.Sin(t);
         }
+
+        public static double step_01(double t)
+        {
+            if (t >= -0.5d && t <= 0.5d)
+            {
+                return 1d;
+            }
+            else return 0d;
+        }
+
+        public static double conv_tri_test(double t)
+        {
+            if (t >= -1d && t <= 0d)
+            {
+                return t + 1d;
+            }
+            if (t > 0d && t <= 1d) return 1d - t;
+
+            return 0d;
+        }
+
     }
 }
