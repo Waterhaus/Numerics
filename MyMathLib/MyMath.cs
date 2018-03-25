@@ -10,6 +10,11 @@ namespace MyMathLib
     {
         public class Basic
         {
+            public static int Factorial(int n)
+            {
+                if (n >= 2) return n * Factorial(n - 1);
+                return 1;
+            }
 
             public static double SumArray(double[] arr)
             {
@@ -175,8 +180,29 @@ namespace MyMathLib
             }
 
 
+            public static double ForwardDifferences(Vector div)
+            {
+                
 
+                for (int i = 0; i < div.Length - 1; i++)
+                {
+                    for (int j = 0; j < div.Length - i - 1; j++)
+                    {
+                        div[j] = div[j + 1] - div[j];
+                    }
+                }
 
+                return div[0];
+
+            }
+            public static double DividedDifferences(Vector v, double h)
+            {
+                int k = v.Length - 1;
+                double temp = Math.Pow(h, k) * (double)MyMath.Basic.Factorial(k);
+
+                return ForwardDifferences(v) / temp;
+
+            }
 
         }
 

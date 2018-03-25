@@ -60,6 +60,7 @@
     <Compile Include="MultyGridTests\ProectorSplineExperiment.cs" />
     <Compile Include="MultyGridTests\PRTest.cs" />
     <Compile Include="MyMathBasicTests.cs" />
+    <Compile Include="MyMathOperatorsTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VectorClassTest.cs" />
   </ItemGroup>
