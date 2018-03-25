@@ -205,6 +205,7 @@ namespace MyMathLib
 
         }
 
+        //метод нахождения матрицы перехода 
         [TestMethod]
         public void FindMatrixTest()
         {

@@ -26,6 +26,27 @@ namespace MyMathLib
         }
 
         [TestMethod]
+        public void CompareConvolutionWhithBasisSplineTest()
+        {
+            //setup
+            int GridSize = 1000;
+            double a = -3d;
+            double b = 5d;
+            Vector grid = Vector.CreateUniformGrid(GridSize, a, b);
+            BasisSpline spline = new BasisSpline(3, 10, a, b);
+           //  Console.WriteLine("grid = " + spline.grid);
+            Vector expect = spline.GetVectorBasis(grid, 3);
+            Console.WriteLine("expect = "+ expect);
+           //run
+            Vector actual = MyMath.Operations.GetConvolutionVector(FunctionLib.conv_tri_test, FunctionLib.conv_tri_test, GridSize, a, b);
+            Console.WriteLine("actual = "+ actual);
+            //compare
+            double NORM = (expect - actual).Norm;
+            Console.WriteLine("Норма разности = " + NORM);
+            Assert.AreEqual(0d, NORM, 0.1d);
+        }
+
+        [TestMethod]
         public void CompareConvolutionInZeroPointTest()
         {
             //setup
