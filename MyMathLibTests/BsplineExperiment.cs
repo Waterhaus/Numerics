@@ -44,6 +44,48 @@ namespace MyMathLib
         }
 
         [TestMethod]
+        public void DeBoorB_Integrate()
+        {
+            //setup
+            int GridSize = 20;
+            double a = 0;
+            double b = 1d;
+            double c = 10d;
+            double EPS = 0.01d;
+            int N = 1000;
+            int index = 2;
+            Vector grid1 = Vector.CreateUniformGrid(N, a, b);
+            Vector grid2 = Vector.CreateUniformGrid(N, a, c);
+
+            
+
+            int deg = 4;
+
+            BasisSpline spline1 = new BasisSpline(deg, GridSize, a, b);
+            BasisSpline spline2 = new BasisSpline(deg, GridSize, a, c);
+
+            //run
+
+            for (index = 0; index < GridSize; index++)
+            {
+                Console.WriteLine("index = " + index);
+                Vector f1 = spline1.GetVectorBasis(grid1, index);
+                Vector f2 = spline2.GetVectorBasis(grid2, index);
+
+                double I1 = MyMathLib.Integrate.RiemannSum(f1.ToArray, MyMathLib.MyMath.Basic.GetStep(N, a, b));
+                double I2 = MyMathLib.Integrate.RiemannSum(f2.ToArray, MyMathLib.MyMath.Basic.GetStep(N, a, c));
+
+                Console.WriteLine("Integral B"+index+" on [0, 1] = " + I1);
+                Console.WriteLine("Integral B" + index + " on [0, 10] = " + I2);
+                //comp
+                Assert.IsTrue(I2 > I1, "Интеграл с функции большем носителем должен быть больше!");
+
+            }
+
+
+        }
+
+        [TestMethod]
         public void DeBoorB_1_return1()
         {
             int deg = 4;
