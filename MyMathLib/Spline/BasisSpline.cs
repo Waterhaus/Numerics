@@ -117,7 +117,7 @@ namespace MyMathLib
         public double FastCalculateSpline(double x)
         {
             double S = 0d;
-            double B = 0;
+            
             if (x < grid.Left || x > grid.Right) return 0;  //если не лежит в отрезке то 0
             int J = grid.Find(x);
             int p = degree - 1;

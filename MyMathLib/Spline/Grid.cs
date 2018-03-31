@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MyMathLib
 {
-    public enum GridType { ClassicSplineGrid, UniformSplineGrid, ExperimentSplineGrid }
+    public enum GridType { ClassicSplineGrid, UniformSplineGrid, ExperimentSplineGrid, AbsolutUniformSplineGrid }
 
     public class Grid
     {
@@ -49,6 +49,16 @@ namespace MyMathLib
         public double Right
         {
             get { return b_border; }
+        }
+
+        public double First
+        {
+            get { return extendetGrid[0]; }
+        }
+
+        public double Last
+        {
+            get { return extendetGrid[extendetGrid.Count - 1]; }
         }
 
         public int BeginIndex
@@ -205,6 +215,25 @@ namespace MyMathLib
             beginIndex = FindBeginIndex(extendetGrid);
             endIndex = FindEndIndex(extendetGrid);
         }
+
+        //расширение отрезка [a, b]
+        public void ToAbsolutUniformSplineGrid()
+        {
+            gridType = GridType.AbsolutUniformSplineGrid;
+            extendetGrid.Clear();
+
+            int p1 = degree / 2;
+            int p2 = p1;
+            if (p1 + p2 < degree) p1 = p1 + 1;
+            extendetGrid = new List<double>(originGrid);
+            double h = MyMath.Basic.GetStep(originGrid.Count, originGrid[0], originGrid[originGrid.Count - 1]);
+            Expend(h,p1, p2, ref extendetGrid);
+
+            beginIndex = p1;
+            endIndex = extendetGrid.Count - p2 - 1; //???????
+        }
+
+
         public void ToExperimentSplineGrid()
         {
             gridType = GridType.UniformSplineGrid;
@@ -290,6 +319,28 @@ namespace MyMathLib
                 {
                     grid.Add(end);
                 }
+
+
+        }
+
+        public static void Expend(double step, int left_count, int right_count, ref List<double> grid)
+        {
+
+
+            double begin = grid[0];
+            double end = grid[grid.Count - 1];
+
+
+
+            for (int k = 1; k <= left_count; k++)
+            {
+                grid.Insert(0, begin - k*step);
+
+            }
+            for (int k = 1; k <= right_count; k++)
+            {
+                grid.Add(end + k*step);
+            }
 
 
         }

@@ -26,6 +26,30 @@ namespace MyMathLibTests
         }
 
         [TestMethod]
+        public void CreateAbsolutUniformGrid_4_11_0_1()
+        {
+            //подготовка входных данных
+            int GridSize = 11;
+            double a = 0d;
+            double b = 1d;
+            double expect1 = -0.2d;
+            double expect2 = 1.2d;
+            double EPS = 0.000000001d;
+            int deg = 4;
+            //выполнение кода
+
+            MyMathLib.Grid grid = new MyMathLib.Grid(deg,GridSize,a,b);
+            grid.ToAbsolutUniformSplineGrid();
+            Console.WriteLine("new grid" + grid);
+            double actual2 = grid.Last;
+            double actual1 = grid.First;
+
+            //проверка
+            Assert.AreEqual(expect1, actual1, EPS, "Неправильное расширение отрезка");
+            Assert.AreEqual(expect2, actual2, EPS, "Неправильное расширение отрезка");
+        }
+
+        [TestMethod]
         public void CreateUniformGrid_10_0_2_returnSUM()
         {
             //подготовка входных данных
