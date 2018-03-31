@@ -36,6 +36,9 @@ namespace MyMathLib
                 case GridType.ExperimentSplineGrid:
                     grid.ToExperimentSplineGrid();
                     break;
+                case GridType.AbsolutUniformSplineGrid:
+                    grid.ToAbsolutUniformSplineGrid();
+                    break;
                 default:
                     break;
             }
@@ -270,9 +273,14 @@ namespace MyMathLib
 
                 if (index < J || index > J + p) return 0; //если не в suppBj от 0
 
-                if (index == tau.BeginIndex && Math.Abs(x - tau.Left) < EPS) return 1d;
-                if (index == tau.Count - 1 && Math.Abs(x - tau.Right) < EPS) return 1d;
+                if(tau.gridType != GridType.AbsolutUniformSplineGrid)
+                {
 
+                    if (index == tau.BeginIndex && Math.Abs(x - tau.Left) < EPS) return 1d;
+                    if (index == tau.Count - 1 && Math.Abs(x - tau.Right) < EPS) return 1d;
+
+
+                }
                 Vector b = bsplv(x, tau, deg, J);
 
                 return b[index - J];

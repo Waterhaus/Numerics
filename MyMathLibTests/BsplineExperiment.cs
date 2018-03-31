@@ -116,6 +116,26 @@ namespace MyMathLib
             //comp
             Assert.AreEqual(expect, actual, EPS, "Должно обращаться в этой точке в 1");
         }
+
+        [TestMethod]
+        public void AbsolutUniformGridInterpolationMatrixExperimentTest()
+        {
+            //подготовка входных данных
+            int GridSize = 11;
+            double a = 0d;
+            double b = 1d;
+            int deg = 4;
+            MyMathLib.Grid grid = new MyMathLib.Grid(deg, GridSize, a, b);
+            grid.ToAbsolutUniformSplineGrid();
+            double expect = 0.167d;
+            //выполнение кода
+            Matrix A = BasisSpline.DeBoorMethods.SlowCreateInterpolationMatrix(grid, deg);
+
+            Console.WriteLine(A);
+            double actual = A[0, 0];
+            //compare
+            Assert.AreEqual(expect, actual, 0.01d);
+        }
     }
     
     
