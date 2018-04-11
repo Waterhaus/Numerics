@@ -46,7 +46,7 @@ namespace MyMathLib
             C = Interpolate(y_knots, grid, deg);
         }
 
-        public BasisSpline(int deg, int GridSize, double a_border, double b_border, GridType gridType,bool interpolate)
+        public BasisSpline(int deg, int GridSize, double a_border, double b_border, GridType gridType)
         {
             degree = deg;
             Vector grid_h = Vector.CreateUniformGrid(GridSize, a_border, b_border);
