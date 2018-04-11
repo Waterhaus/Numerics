@@ -39,7 +39,7 @@ namespace MyMathLibTests
             //выполнение кода
 
             MyMathLib.Grid grid = new MyMathLib.Grid(deg,GridSize,a,b);
-            grid.ToAbsolutUniformSplineGrid();
+            grid.ToMiddleUniformSplineGrid();
             Console.WriteLine("new grid" + grid);
             double actual2 = grid.Last;
             double actual1 = grid.First;

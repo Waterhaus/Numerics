@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MyMathLib
 {
-    public enum GridType { ClassicSplineGrid, UniformSplineGrid, ExperimentSplineGrid, AbsolutUniformSplineGrid }
+    public enum GridType { ClassicSplineGrid, UniformSplineGrid, ExperimentSplineGrid, MiddleUniformSplineGrid, RightUniformSplineGrid, LeftUniformSplineGrid }
 
     public class Grid
     {
@@ -217,9 +217,9 @@ namespace MyMathLib
         }
 
         //расширение отрезка [a, b]
-        public void ToAbsolutUniformSplineGrid()
+        public void ToMiddleUniformSplineGrid()
         {
-            gridType = GridType.AbsolutUniformSplineGrid;
+            gridType = GridType.MiddleUniformSplineGrid;
             extendetGrid.Clear();
 
             int p1 = degree / 2;
@@ -234,6 +234,40 @@ namespace MyMathLib
         }
 
 
+        //расширение отрезка [a, b]
+        public void ToRightUniformSplineGrid()
+        {
+            gridType = GridType.RightUniformSplineGrid;
+            extendetGrid.Clear();
+
+            int p1 = 0;
+            int p2 = degree;
+            
+            extendetGrid = new List<double>(originGrid);
+            double h = MyMath.Basic.GetStep(originGrid.Count, originGrid[0], originGrid[originGrid.Count - 1]);
+            Expend(h, p1, p2, ref extendetGrid);
+
+            beginIndex = degree - 1;
+            endIndex = extendetGrid.Count - 1; //???????
+        }
+
+
+        //расширение отрезка [a, b]
+        public void ToLeftUniformSplineGrid()
+        {
+            gridType = GridType.LeftUniformSplineGrid;
+            extendetGrid.Clear();
+
+            int p1 = degree;
+            int p2 = 0;
+
+            extendetGrid = new List<double>(originGrid);
+            double h = MyMath.Basic.GetStep(originGrid.Count, originGrid[0], originGrid[originGrid.Count - 1]);
+            Expend(h, p1, p2, ref extendetGrid);
+
+            beginIndex = p1;
+            endIndex = extendetGrid.Count - 1; //???????
+        }
         public void ToExperimentSplineGrid()
         {
             gridType = GridType.UniformSplineGrid;
@@ -420,14 +454,16 @@ namespace MyMathLib
             double EPS = 0.00000001d;
             if (x < extendetGrid[0] || x > extendetGrid[extendetGrid.Count - 1]) throw new ArgumentException("Точка х вне границ отрезка!");
 
-            for (int index = BeginIndex; index < EndIndex; index++)
+            int index = FindBeginIndex(extendetGrid);
+            for ( ; index < extendetGrid.Count; index++)
             {
                 if (x >= extendetGrid[index] && x < extendetGrid[index + 1]) return index;
             }
 
-            if (x.Equals(extendetGrid[EndIndex])) return EndIndex - 1;
+            
+            return FindEndIndex(extendetGrid);
 
-            return -1;
+           
         }
     }
 }

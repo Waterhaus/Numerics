@@ -36,8 +36,11 @@ namespace MyMathLib
                 case GridType.ExperimentSplineGrid:
                     grid.ToExperimentSplineGrid();
                     break;
-                case GridType.AbsolutUniformSplineGrid:
-                    grid.ToAbsolutUniformSplineGrid();
+                case GridType.MiddleUniformSplineGrid:
+                    grid.ToMiddleUniformSplineGrid();
+                    break;
+                case GridType.RightUniformSplineGrid:
+                    grid.ToRightUniformSplineGrid();
                     break;
                 default:
                     break;
@@ -65,8 +68,14 @@ namespace MyMathLib
                 case GridType.ExperimentSplineGrid:
                     grid.ToExperimentSplineGrid();
                     break;
-                case GridType.AbsolutUniformSplineGrid:
-                    grid.ToAbsolutUniformSplineGrid();
+                case GridType.MiddleUniformSplineGrid:
+                    grid.ToMiddleUniformSplineGrid();
+                    break;
+                case GridType.RightUniformSplineGrid:
+                    grid.ToRightUniformSplineGrid();
+                    break;
+                case GridType.LeftUniformSplineGrid:
+                    grid.ToLeftUniformSplineGrid();
                     break;
                 default:
                     break;
@@ -217,6 +226,12 @@ namespace MyMathLib
             return f;
         }
 
+        public double GetBasis(double x, int index)
+        {   
+           return DeBoorMethods.DeBoorB(x, grid, degree, index);
+           
+        }
+
         public class DeBoorMethods
         {
 
@@ -299,10 +314,11 @@ namespace MyMathLib
                 int p = deg - 1;
                 index = index + tau.BeginIndex;
 
+                
 
                 if (index < J || index > J + p) return 0; //если не в suppBj от 0
 
-                if(tau.gridType != GridType.AbsolutUniformSplineGrid)
+                if(tau.gridType != GridType.MiddleUniformSplineGrid && tau.gridType != GridType.RightUniformSplineGrid && tau.gridType != GridType.LeftUniformSplineGrid)
                 {
 
                     if (index == tau.BeginIndex && Math.Abs(x - tau.Left) < EPS) return 1d;

@@ -83,7 +83,7 @@ namespace MyMathLib
             Vector y = MyMath.Basic.GetVectorFunction(GridSize, a, b, FunctionLib.tsin);
 
             //run
-            BasisSpline bspline = new BasisSpline(deg, grid, y, GridType.AbsolutUniformSplineGrid);
+            BasisSpline bspline = new BasisSpline(deg, grid, y, GridType.MiddleUniformSplineGrid);
 
             //compare
             int N = 150;

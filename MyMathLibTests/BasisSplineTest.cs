@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace MyMathLibTests
+namespace MyMathLib
 {
     [TestClass]
     public class BasisSplineTest
@@ -82,7 +82,26 @@ namespace MyMathLibTests
 
         }
 
+        [TestMethod]
+        public void LeftUniformBSplineTest()
+        {
+            //setup
+            int GridSize = 5;
+            double a = 0;
+            double b = 5d;
+            int N = 1000;
+            double h = MyMath.Basic.GetStep(GridSize, a, b);
+            int deg = 4;
+            int index = 0;
 
-       
+            //Vector x = new Vector(MyMath.Basic.CreateUniformGrid(N, a - 2 * h, b + deg * h));
+            BasisSpline spline = new BasisSpline(deg, GridSize, a, b, GridType.LeftUniformSplineGrid);
+            //run
+            double Ba = spline.GetBasis(a, index);
+
+            //compare
+            Assert.AreEqual(0d, Ba, 0.000001d);
+        }
+
     }
 }

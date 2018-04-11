@@ -126,7 +126,7 @@ namespace MyMathLib
             double b = 1d;
             int deg = 4;
             MyMathLib.Grid grid = new MyMathLib.Grid(deg, GridSize, a, b);
-            grid.ToAbsolutUniformSplineGrid();
+            grid.ToMiddleUniformSplineGrid();
             double expect = 0.167d;
             //выполнение кода
             Matrix A = BasisSpline.DeBoorMethods.SlowCreateInterpolationMatrix(grid, deg);
