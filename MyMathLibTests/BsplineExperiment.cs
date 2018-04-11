@@ -131,6 +131,9 @@ namespace MyMathLib
             //выполнение кода
             Matrix A = BasisSpline.DeBoorMethods.SlowCreateInterpolationMatrix(grid, deg);
 
+            Console.WriteLine("beginIndex = " + grid.BeginIndex);
+            Console.WriteLine("endIndex = " + grid.EndIndex);
+            Console.WriteLine(grid);
             Console.WriteLine(A);
             double actual = A[0, 0];
             //compare

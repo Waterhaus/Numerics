@@ -46,7 +46,36 @@ namespace MyMathLib
             C = Interpolate(y_knots, grid, deg);
         }
 
-        
+        public BasisSpline(int deg, int GridSize, double a_border, double b_border, GridType gridType,bool interpolate)
+        {
+            degree = deg;
+            Vector grid_h = Vector.CreateUniformGrid(GridSize, a_border, b_border);
+            C = new Vector(grid_h.Length);
+            type = BasisSplineType.ForMultyGrid;
+
+            grid = new Grid(degree, grid_h.ToArray);
+            switch (gridType)
+            {
+                case GridType.ClassicSplineGrid:
+                    grid.ToClassicSplineGrid();
+                    break;
+                case GridType.UniformSplineGrid:
+                    grid.ToUniformSplineGrid();
+                    break;
+                case GridType.ExperimentSplineGrid:
+                    grid.ToExperimentSplineGrid();
+                    break;
+                case GridType.AbsolutUniformSplineGrid:
+                    grid.ToAbsolutUniformSplineGrid();
+                    break;
+                default:
+                    break;
+            }        
+
+            Console.WriteLine("grid = " + grid.ToString());
+        }
+
+
         public BasisSpline(int deg, int GridSize, double a_border, double b_border)
         {
             degree = deg;
