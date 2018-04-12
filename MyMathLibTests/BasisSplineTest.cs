@@ -83,7 +83,7 @@ namespace MyMathLib
         }
 
         [TestMethod]
-        public void LeftUniformBSplineTest()
+        public void RightUniformBSplineTest()
         {
             //setup
             int GridSize = 5;
@@ -95,9 +95,9 @@ namespace MyMathLib
             int index = 0;
 
             //Vector x = new Vector(MyMath.Basic.CreateUniformGrid(N, a - 2 * h, b + deg * h));
-            BasisSpline spline = new BasisSpline(deg, GridSize, a, b, GridType.LeftUniformSplineGrid);
+            BasisSpline spline = new BasisSpline(deg, GridSize, a, b, GridType.RightUniformSplineGrid);
             //run
-            double Ba = spline.GetBasis(a, index);
+            double Ba = spline.GetBasis(0.1d, index);
 
             //compare
             Assert.AreEqual(0d, Ba, 0.000001d);

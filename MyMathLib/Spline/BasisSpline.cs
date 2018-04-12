@@ -261,6 +261,45 @@ namespace MyMathLib
                 return b;
             }
 
+            //подсчет базисных сплайнов
+            public static Vector bsplv_spec(double x, Grid grid, int deg, int index)
+            {
+                int n_knots = grid.Count;
+                Vector b = new Vector(deg);
+                b[0] = 1;
+                double[] d_R = new double[deg];
+                double[] d_L = new double[deg];
+                double term;
+                double saved;
+                for (int j = 0; j < deg - 1; j++)
+                {
+                    if (index + j + 1 < grid.Count) d_R[j] = grid[index + j + 1] - x; // k right values
+                    else d_R[j] = 0;
+
+                    if (index - j >= 0) d_L[j] = x - grid[index - j];     // k left values
+                    else d_L[j] = 0;
+
+                    saved = 0;
+                    for (int r = 0; r <= j; r++)
+                    {
+                        term = b[r] / (d_R[r] + d_L[j - r]);
+                        b[r] = saved + d_R[r] * term;
+                        saved = d_L[j - r] * term;
+                    }
+                    b[j + 1] = saved;
+                }
+                return b;
+            }
+            //delete
+            public static double DeBoorExperiment(double x, Grid grid, int deg, int index)
+            {
+                int J = grid.Find(x);
+                int p = deg;
+                
+                Vector b = bsplv_spec(x, grid, deg, J);
+
+                return b[deg - 1];
+            }
 
             //slow calculation
             public static double ClassicBasisSpline(double x, Grid grid, int deg, int index)
@@ -326,7 +365,7 @@ namespace MyMathLib
 
 
                 }
-                Vector b = bsplv(x, tau, deg, J);
+                Vector b = bsplv_spec(x, tau, deg, J);
 
                 return b[index - J];
 

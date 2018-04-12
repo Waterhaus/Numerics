@@ -247,7 +247,7 @@ namespace MyMathLib
             double h = MyMath.Basic.GetStep(originGrid.Count, originGrid[0], originGrid[originGrid.Count - 1]);
             Expend(h, p1, p2, ref extendetGrid);
 
-            beginIndex = degree - 1;
+            beginIndex = 0;
             endIndex = extendetGrid.Count - 1; //???????
         }
 
