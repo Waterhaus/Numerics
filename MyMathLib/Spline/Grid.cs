@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MyMathLib
 {
-    public enum GridType { ClassicSplineGrid, UniformSplineGrid, ExperimentSplineGrid, MiddleUniformSplineGrid, RightUniformSplineGrid, LeftUniformSplineGrid }
+    public enum GridType { SimpleSplineGrid , ClassicSplineGrid, UniformSplineGrid, ExperimentSplineGrid, MiddleUniformSplineGrid, RightUniformSplineGrid, LeftUniformSplineGrid }
 
     public class Grid
     {
@@ -155,6 +155,17 @@ namespace MyMathLib
             endIndex = FindEndIndex(extendetGrid);
         }
 
+        public Grid(int deg, Vector origin, double a, double b, bool isEmpty)
+        {
+            a_border = a;
+            b_border = b;
+            degree = deg;
+            dim = origin.Length;
+
+            extendetGrid = new List<double>();
+            originGrid = new List<double>(origin.ToArray);
+        }
+
 
         public double this[int i]
         {
@@ -233,6 +244,24 @@ namespace MyMathLib
             endIndex = extendetGrid.Count - p2 - 1; //???????
         }
 
+
+        //расширение отрезка [a, b]
+        public void ToSimpleUniformSplineGrid()
+        {
+            gridType = GridType.SimpleSplineGrid;
+            extendetGrid.Clear();
+
+            int p1 = degree - 1;
+            int p2 = degree - 1;
+            
+            extendetGrid = new List<double>(originGrid);
+            double h = MyMath.Basic.GetStep(originGrid.Count, originGrid[0], originGrid[originGrid.Count - 1]);
+            Expend(h,p1 - 1, p2 - 1,ref extendetGrid);
+            ConstExpend( p1, p2, ref extendetGrid);
+
+            beginIndex = p1;
+            endIndex = extendetGrid.Count - p2 - 1; //???????
+        }
 
         //расширение отрезка [a, b]
         public void ToRightUniformSplineGrid()
@@ -379,6 +408,28 @@ namespace MyMathLib
 
         }
 
+        public static void ConstExpend(int left_count, int right_count, ref List<double> grid)
+        {
+
+
+            double begin = grid[0];
+            double end = grid[grid.Count - 1];
+
+
+
+            for (int k = 1; k <= left_count; k++)
+            {
+                grid.Insert(0, begin);
+
+            }
+            for (int k = 1; k <= right_count; k++)
+            {
+                grid.Add(end);
+            }
+
+
+        }
+
         public static int FindBeginIndex(List<double> mas)
         {
             int index = -1;
@@ -455,9 +506,10 @@ namespace MyMathLib
             if (x < extendetGrid[0] || x > extendetGrid[extendetGrid.Count - 1]) throw new ArgumentException("Точка х вне границ отрезка!");
 
             int index = FindBeginIndex(extendetGrid);
-            for ( ; index < extendetGrid.Count; index++)
+            for ( ; index < extendetGrid.Count - 1; index++)
             {
-                if (x >= extendetGrid[index] && x < extendetGrid[index + 1]) return index;
+                if (x >= extendetGrid[index] && x < extendetGrid[index + 1])
+                    return index;
             }
 
             

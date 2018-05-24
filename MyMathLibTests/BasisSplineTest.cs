@@ -103,5 +103,28 @@ namespace MyMathLib
             Assert.AreEqual(0d, Ba, 0.000001d);
         }
 
+
+        [TestMethod]
+        public void SimpleUniformBSplineTest_dim()
+        {
+            //setup
+            int GridSize = 2;
+            double a = 0;
+            double b = 7d;
+            int deg = 4;
+            int index = 0;
+
+            BasisSpline spline = new BasisSpline(deg, GridSize, a, b, GridType.SimpleSplineGrid);
+            Console.WriteLine(new Vector(MyMath.Basic.CreateUniformGrid(GridSize, a, b))); 
+            int expect = GridSize + 2 * (deg - 1) + 2*(deg - 2);
+            //run
+            int actual = spline.grid.Count;
+
+            //compare
+            Console.WriteLine( "expect = " + expect + "; actual = " + actual);
+            Assert.AreEqual(expect,actual,"размерности совпадают");
+        }
+
+
     }
 }
