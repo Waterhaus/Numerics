@@ -24,9 +24,14 @@ namespace MyMathLib
         public BasisSpline(int deg, Vector x_knots, Vector y_knots, GridType gridType)
         {
             degree = deg;
-            grid = new Grid(degree, x_knots, x_knots[0], x_knots.Last);
+            grid = new Grid(degree, x_knots, x_knots[0], x_knots.Last,true);
+            bool canInterpolate = true;
             switch (gridType)
             {
+                case GridType.SimpleSplineGrid:
+                    grid.ToSimpleUniformSplineGrid();
+                    canInterpolate = false;
+                    break;
                 case GridType.ClassicSplineGrid:
                     grid.ToClassicSplineGrid();
                     break;
@@ -46,7 +51,7 @@ namespace MyMathLib
                     break;
             }
             Console.WriteLine("grid = " +  grid.ToString() );
-            C = Interpolate(y_knots, grid, deg);
+            if(canInterpolate) C = Interpolate(y_knots, grid, deg);
         }
 
         public BasisSpline(int deg, int GridSize, double a_border, double b_border, GridType gridType)
@@ -56,9 +61,16 @@ namespace MyMathLib
             C = new Vector(grid_h.Length);
             type = BasisSplineType.ForMultyGrid;
 
+            bool canInterpolate = true;
+
             grid = new Grid(degree, grid_h.ToArray);
             switch (gridType)
             {
+                case GridType.SimpleSplineGrid:
+                    grid.ToSimpleUniformSplineGrid();
+                    canInterpolate = false;
+                    break;
+
                 case GridType.ClassicSplineGrid:
                     grid.ToClassicSplineGrid();
                     break;
@@ -110,9 +122,9 @@ namespace MyMathLib
 
         public void SetNewCoefs(Vector c)
         {
-            if(grid.Dimetion == c.Length)
+            //if(grid.Dimetion == c.Length)
             Vector.copy(ref C, c);
-            else Console.WriteLine("Неверное количество коэффициентов для базисных сплайнов");
+            //else Console.WriteLine("Неверное количество коэффициентов для базисных сплайнов");
         }
 
 
@@ -132,8 +144,35 @@ namespace MyMathLib
         {
             if (deg == 2) return y_knots;
             Matrix A = DeBoorMethods.SlowCreateInterpolationMatrix(grid, deg);
+            Console.WriteLine(A);
+
             Vector coefs = Solver.BCGSTAB(A, y_knots, EPS);
             
+            return coefs;
+        }
+
+
+
+        public static Vector SimpleInterpolate(Vector y_knots, Grid grid, int deg)
+        {
+            if (deg == 2) return y_knots;
+            int p = grid.SplineDegree;
+            int N = grid.Count - 2 * (p - 1) - 2*(p - 2);
+            Matrix A = new Matrix(N);
+            Vector coefs = new Vector();
+
+            for (int i = 0; i < N; i++)
+            {
+                for (int j = 0; j < N; j++)
+                {
+                    A[i, j] =  DeBoorMethods.SimpleDeBoorB(grid.GetOrigin(i), grid, deg, j + p - 1);
+                }
+            }
+
+            if(A.Length.n < 15)Console.WriteLine(A);
+
+            coefs = Solver.BCGSTAB(A, y_knots, EPS);
+
             return coefs;
         }
 
@@ -261,6 +300,45 @@ namespace MyMathLib
                 return b;
             }
 
+            //подсчет базисных сплайнов
+            public static Vector bsplv_spec(double x, Grid grid, int deg, int index)
+            {
+                int n_knots = grid.Count;
+                Vector b = new Vector(deg);
+                b[0] = 1;
+                double[] d_R = new double[deg];
+                double[] d_L = new double[deg];
+                double term;
+                double saved;
+                for (int j = 0; j < deg - 1; j++)
+                {
+                    if (index + j + 1 < grid.Count) d_R[j] = grid[index + j + 1] - x; // k right values
+                    else d_R[j] = 0;
+
+                    if (index - j >= 0) d_L[j] = x - grid[index - j];     // k left values
+                    else d_L[j] = 0;
+
+                    saved = 0;
+                    for (int r = 0; r <= j; r++)
+                    {
+                        term = b[r] / (d_R[r] + d_L[j - r]);
+                        b[r] = saved + d_R[r] * term;
+                        saved = d_L[j - r] * term;
+                    }
+                    b[j + 1] = saved;
+                }
+                return b;
+            }
+            //delete
+            public static double DeBoorExperiment(double x, Grid grid, int deg, int index)
+            {
+                int J = grid.Find(x);
+                int p = deg;
+                
+                Vector b = bsplv_spec(x, grid, deg, J);
+
+                return b[deg - 1];
+            }
 
             //slow calculation
             public static double ClassicBasisSpline(double x, Grid grid, int deg, int index)
@@ -312,6 +390,13 @@ namespace MyMathLib
                 if (x < tau.Left || x > tau.Right) return 0;  //если не лежит в отрезке то 0
                 int J = tau.Find(x);
                 int p = deg - 1;
+                int originLength = tau.GetOriginArray().Length;
+                if (Math.Abs(x - tau.Right) < EPS && index <= originLength - 1)
+                {
+                    if (index == originLength - 1) return 1;
+                    return 0;
+                }
+
                 index = index + tau.BeginIndex;
 
                 
@@ -326,7 +411,28 @@ namespace MyMathLib
 
 
                 }
-                Vector b = bsplv(x, tau, deg, J);
+                Vector b = bsplv_spec(x, tau, deg, J);
+
+                return b[index - J];
+
+            }
+
+            //основан на bsplvb
+            public static double SimpleDeBoorB(double x, Grid tau, int deg, int index)
+            {
+                if (x < tau.Left || x > tau.Right) return 0;  //если не лежит в отрезке то 0
+                int J = tau.Find(x);
+                int p = deg - 1;
+                int originLength = tau.GetOriginArray().Length;
+                
+                index = index + tau.BeginIndex;
+
+
+
+                if (index < J || index > J + p) return 0; //если не в suppBj от 0
+
+                
+                Vector b = bsplv_spec(x, tau, deg, J);
 
                 return b[index - J];
 
@@ -381,6 +487,10 @@ namespace MyMathLib
                 {
                     for (int j = 0; j < tau.Dimetion; j++)
                     {
+                        if (i == tau.Dimetion - 1 && j == tau.Dimetion - 1)
+                        {
+                            int a = 0;
+                        }
                         A[i, j] = DeBoorB(tau.GetOrigin(i), tau, deg, j);
                     }
                 }
