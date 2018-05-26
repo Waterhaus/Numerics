@@ -455,7 +455,7 @@ namespace MyMathLib
             if (x < extendetGrid[0] || x > extendetGrid[extendetGrid.Count - 1]) throw new ArgumentException("Точка х вне границ отрезка!");
 
             int index = FindBeginIndex(extendetGrid);
-            for ( ; index < extendetGrid.Count; index++)
+            for ( ; index < extendetGrid.Count - 1; index++)
             {
                 if (x >= extendetGrid[index] && x < extendetGrid[index + 1]) return index;
             }
