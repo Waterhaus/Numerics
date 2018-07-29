@@ -21,6 +21,12 @@ namespace MyMathLib
             get { return C; }
         }
 
+        public BasisSpline()
+        {
+            degree = 0;
+
+        }
+
         public BasisSpline(int deg, Vector x_knots, Vector y_knots, GridType gridType)
         {
             degree = deg;
@@ -110,13 +116,13 @@ namespace MyMathLib
 
         public BasisSpline GetBasisSpline_Down()
         {
-            int n = MultyGrid.MultyGridMethod.DownDimentionSpline4(grid.Dimetion);
+            int n = MultyGrid.MultyGridMethod.DownDimentionSpline4(grid.OriginalCount);
             return new BasisSpline(degree, n, grid.Left, grid.Right);
         }
 
         public BasisSpline GetBasisSpline_Up()
         {
-            int N = MultyGrid.MultyGridMethod.UpDimentionSpline4(grid.Dimetion);
+            int N = MultyGrid.MultyGridMethod.UpDimentionSpline4(grid.OriginalCount);
             return new BasisSpline(degree, N, grid.Left, grid.Right);
         }
 
@@ -131,7 +137,7 @@ namespace MyMathLib
 
         public Vector GetAllBasis(double x)
         {
-            Vector B = new Vector(grid.Dimetion);
+            Vector B = new Vector(grid.OriginalCount);
 
             for (int i = 0; i < B.Length; i++)
             {
@@ -481,13 +487,13 @@ namespace MyMathLib
 
             public static Matrix SlowCreateInterpolationMatrix(Grid tau, int deg)
             {
-                Matrix A = new Matrix(tau.Dimetion);
+                Matrix A = new Matrix(tau.OriginalCount);
 
-                for (int i = 0; i < tau.Dimetion; i++)
+                for (int i = 0; i < tau.OriginalCount; i++)
                 {
-                    for (int j = 0; j < tau.Dimetion; j++)
+                    for (int j = 0; j < tau.OriginalCount; j++)
                     {
-                        if (i == tau.Dimetion - 1 && j == tau.Dimetion - 1)
+                        if (i == tau.OriginalCount - 1 && j == tau.OriginalCount - 1)
                         {
                             int a = 0;
                         }
@@ -497,5 +503,7 @@ namespace MyMathLib
                 return A;
             }
         }
+
+        public class Kalitkin { }
     }
 }

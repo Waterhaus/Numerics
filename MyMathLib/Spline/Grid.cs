@@ -34,7 +34,7 @@ namespace MyMathLib
             get { return extendetGrid.Count; }
         }
 
-        public int Dimetion
+        public int OriginalCount
         {
             get { return dim; }
         }
