@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace MyMathLib
 {
-    class CardinalSpline
+    public class CardinalSpline
     {
 
-        public static double ForwardDifferences(double[] div)
+        private static double ForwardDifferences(double[] div)
         {
 
 
@@ -24,7 +24,7 @@ namespace MyMathLib
             return div[0];
 
         }
-        public static double DividedDifferences(double[] v)
+        private static double DividedDifferences(double[] v)
         {
             int k = v.Length - 2;
             double temp = (double)MyMathLib.MyMath.Basic.Factorial(k);
@@ -33,13 +33,13 @@ namespace MyMathLib
 
         }
 
-        public static double positive(double x)
+        private static double positive(double x)
         {
             if (x > 0) return x;
             else return 0;
         }
 
-        public static double pol(double x, double t,int n)
+        private static double pol(double x, double t,int n)
         {
             double f = Math.Pow(positive(t - x), n - 1);
 
@@ -71,7 +71,20 @@ namespace MyMathLib
             return BasisCardinal(degree, (x - t_i) / h);
         }
 
+        public static Matrix CreateInterpolationMatrix(Grid tau,double h, int degree)
+        {
+            Matrix A = new Matrix(tau.OriginalCount);
 
+            for (int i = 0; i < tau.OriginalCount; i++)
+            {
+                for (int j = 0; j < tau.OriginalCount; j++)
+                {
+                   
+                    A[i, j] = Cardinal(degree,tau.GetOrigin(j), tau.GetOrigin(i),h);
+                }
+            }
+            return A;
+        }
 
     }
 }
