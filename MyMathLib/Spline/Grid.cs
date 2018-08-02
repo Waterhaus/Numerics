@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MyMathLib
 {
-    public enum GridType { SimpleSplineGrid , ClassicSplineGrid, UniformSplineGrid, ExperimentSplineGrid, MiddleUniformSplineGrid, RightUniformSplineGrid, LeftUniformSplineGrid }
+    public enum GridType { SimpleSplineGrid , ClassicSplineGrid, UniformSplineGrid, ExperimentSplineGrid, MiddleUniformSplineGrid, RightUniformSplineGrid, LeftUniformSplineGrid, PeriodicSpline }
 
     public class Grid
     {
@@ -258,6 +258,24 @@ namespace MyMathLib
             double h = MyMath.Basic.GetStep(originGrid.Count, originGrid[0], originGrid[originGrid.Count - 1]);
             Expend(h,p1 - 1, p2 - 1,ref extendetGrid);
             ConstExpend( p1, p2, ref extendetGrid);
+
+            beginIndex = p1;
+            endIndex = extendetGrid.Count - p2 - 1; //???????
+        }
+
+        //расширение отрезка [a, b]
+        public void ToPeriodiclineGrid()
+        {
+            gridType = GridType.PeriodicSpline;
+            extendetGrid.Clear();
+
+            int p1 = degree - 1;
+            int p2 = degree - 1;
+
+            extendetGrid = new List<double>(originGrid);
+            double h = MyMath.Basic.GetStep(originGrid.Count, originGrid[0], originGrid[originGrid.Count - 1]);
+            Expend(h, p1 - 1, p2 - 1, ref extendetGrid);
+            ConstExpend(p1, p2, ref extendetGrid);
 
             beginIndex = p1;
             endIndex = extendetGrid.Count - p2 - 1; //???????

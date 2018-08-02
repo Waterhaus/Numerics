@@ -53,6 +53,11 @@ namespace MyMathLib
                 case GridType.RightUniformSplineGrid:
                     grid.ToRightUniformSplineGrid();
                     break;
+                case GridType.PeriodicSpline:
+                    grid.ToPeriodiclineGrid();
+                    C = InterpolatePeriodic(y_knots, grid, deg);
+                    canInterpolate = false;
+                    break;
                 default:
                     break;
             }
@@ -154,6 +159,33 @@ namespace MyMathLib
 
             Vector coefs = Solver.BCGSTAB(A, y_knots, EPS);
             
+            return coefs;
+        }
+
+        public static Vector InterpolatePeriodic(Vector y_knots, Grid grid, int deg)
+        {
+            if (deg == 2) return y_knots;
+            Matrix A = DeBoorMethods.SlowCreateInterpolationPeriodicMatrix(grid, deg);
+            int size = deg - 1;
+            Vector spline = new Vector(size);
+            for (int i = 0; i < size; i++)
+            {
+                spline[i] = A[2, i];
+            }
+            int GridSize = y_knots.Length;
+            A[0, GridSize - 2] = spline[0];
+            A[0, GridSize - 1] = spline[1];
+
+            A[1, GridSize - 1] = spline[0];
+
+            A[GridSize - 2, 0] = spline[0];
+            A[GridSize - 1, 0] = spline[1];
+
+            A[GridSize - 1, 1] = spline[0];
+            Console.WriteLine(A);
+
+            Vector coefs = Solver.BCGSTAB(A, y_knots, EPS);
+
             return coefs;
         }
 
@@ -399,7 +431,7 @@ namespace MyMathLib
                 int originLength = tau.GetOriginArray().Length;
                 if (Math.Abs(x - tau.Right) < EPS && index <= originLength - 1)
                 {
-                    if (index == originLength - 1) return 1;
+                    //if (index == originLength - 1) return 1;
                     return 0;
                 }
 
@@ -409,7 +441,7 @@ namespace MyMathLib
 
                 if (index < J || index > J + p) return 0; //если не в suppBj от 0
 
-                if(tau.gridType != GridType.MiddleUniformSplineGrid && tau.gridType != GridType.RightUniformSplineGrid && tau.gridType != GridType.LeftUniformSplineGrid)
+                if(tau.gridType != GridType.MiddleUniformSplineGrid && tau.gridType != GridType.RightUniformSplineGrid && tau.gridType != GridType.LeftUniformSplineGrid && tau.gridType != GridType.PeriodicSpline)
                 {
 
                     if (index == tau.BeginIndex && Math.Abs(x - tau.Left) < EPS) return 1d;
@@ -498,6 +530,24 @@ namespace MyMathLib
                             int a = 0;
                         }
                         A[i, j] = DeBoorB(tau.GetOrigin(i), tau, deg, j);
+                    }
+                }
+                return A;
+            }
+
+            public static Matrix SlowCreateInterpolationPeriodicMatrix(Grid tau, int deg)
+            {
+                Matrix A = new Matrix(tau.OriginalCount);
+
+                for (int i = 0; i < tau.OriginalCount; i++)
+                {
+                    for (int j = 0; j < tau.OriginalCount; j++)
+                    {
+                        if (i == tau.OriginalCount - 1 && j == 10 )
+                        {
+                            int a = 0;
+                        }
+                        A[i, j] = DeBoorB(tau.GetOrigin(i), tau, deg, j + deg);
                     }
                 }
                 return A;

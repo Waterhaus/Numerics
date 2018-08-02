@@ -46,6 +46,11 @@ namespace MyMathLib
             return t * Math.Sin(t);
         }
 
+        public static double one_minus_t_sin(double t)
+        {
+            return (1d - t) * Math.Sin(t);
+        }
+
 
         public static double tttsin(double t)
         {

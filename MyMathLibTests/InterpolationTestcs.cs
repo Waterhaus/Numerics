@@ -331,25 +331,29 @@ namespace MyMathLib
             //setup
             double EPS = 0.1d;
             double a = 0d;
-            double b = 3d;
-            int GridSize = 20;
-            int deg = 2;
+            double b = 1d;
+            int GridSize = 30;
+            int deg = 6;
             Vector grid = Vector.CreateUniformGrid(GridSize, a, b);
-            Vector y = MyMath.Basic.GetVectorFunction(GridSize, a, b, FunctionLib.tsin);
+            Vector y = MyMath.Basic.GetVectorFunction(GridSize, a, b, FunctionLib.one_minus_t_sin);
 
             //run
-            BasisSpline bspline = new BasisSpline(deg, grid, y, GridType.ClassicSplineGrid);
+            BasisSpline bspline = new BasisSpline(deg, grid, y, GridType.PeriodicSpline);
 
             //compare
             int N = 150;
-            Vector expect = MyMath.Basic.GetVectorFunction(N, a, b, FunctionLib.tsin);
+            Vector expect = MyMath.Basic.GetVectorFunction(N, a, b, FunctionLib.one_minus_t_sin);
             Vector actual = bspline.GetVectorFunction(N, a, b);
+
+            Vector bf = bspline.GetVectorFunction(grid);
+
 
             double result = (expect - actual).Norm;
             Console.WriteLine("Степень сплайна = " + deg);
             Console.WriteLine("Сетка по которой построен сплайн = " + bspline.grid.ToString());
             Console.WriteLine("значения х = " + grid.ToString());
             Console.WriteLine("значение f(x) = " + y.ToString());
+            Console.WriteLine("значение bf(x) = " + bf.ToString());
             Console.WriteLine("coef = " + bspline.COEFICIENT.ToString());
             Console.WriteLine("||f - spline|| = " + result.ToString("0.0000"));
             Assert.AreEqual(0, result, EPS, "Плохая интерполяция!");

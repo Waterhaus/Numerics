@@ -139,6 +139,44 @@ namespace MyMathLib
             //compare
             Assert.AreEqual(expect, actual, 0.01d);
         }
+
+        [TestMethod]
+        public void PeriodicInterpolationMatrixExperimentTest()
+        {
+            //подготовка входных данных
+            int GridSize = 15;
+            double a = 0d;
+            double b = 1d;
+            int deg = 6;
+            MyMathLib.Grid grid = new MyMathLib.Grid(deg, GridSize, a, b);
+            grid.ToPeriodiclineGrid();
+          
+            //выполнение кода
+            Matrix A = BasisSpline.DeBoorMethods.SlowCreateInterpolationPeriodicMatrix(grid, deg);
+            int size = deg - 1;
+            Vector spline = new Vector(size);
+            for (int i = 0; i < size; i++)
+            {
+                spline[i] = A[2, i];
+            }
+            Console.WriteLine(spline);
+            Console.WriteLine(grid);
+
+            A[0, GridSize - 2] = spline[0];
+            A[0, GridSize - 1] = spline[1];
+
+            A[1, GridSize - 1] = spline[0];
+
+            A[GridSize - 2, 0] = spline[0];
+            A[GridSize - 1, 0] = spline[1];
+
+            A[GridSize - 1,1] = spline[0];
+
+
+            Console.WriteLine(A);
+            double actual = A[0, 0];
+           
+        }
     }
     
     

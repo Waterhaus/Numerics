@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Spline\CardinalSpline.cs" />
     <Compile Include="Spline\BasisSpline.cs" />
     <Compile Include="LinearAlgebra\DifEquation.cs" />
     <Compile Include="FunctionStore.cs" />
