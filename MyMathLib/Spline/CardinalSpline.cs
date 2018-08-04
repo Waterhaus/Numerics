@@ -75,15 +75,58 @@ namespace MyMathLib
         {
             Matrix A = new Matrix(tau.OriginalCount);
 
+            double[] mas = new double[degree - 1];
+            for (int i = 0; i < degree - 1; i++)
+            {
+                mas[i] = Cardinal(degree, (i+1)*h, 0, h);
+                Console.Write(mas[i] + Environment.NewLine);
+            }
+
+            
             for (int i = 0; i < tau.OriginalCount; i++)
             {
                 for (int j = 0; j < tau.OriginalCount; j++)
                 {
                    
-                    A[i, j] = Cardinal(degree,tau.GetOrigin(j), tau.GetOrigin(i),h);
+                    A[i, j] = Cardinal(degree,tau.GetOrigin(j)+(degree - 1)*h, tau.GetOrigin(i),h);
                 }
             }
+
+            int N = A.Length.n;
+            for (int j = 1; j < mas.Length; j++)
+            {
+                for (int i = 0; i + j < mas.Length; i++)
+                {
+                    A[j - 1, N - degree + 1 + i + j] = mas[i + j - 1];
+                }
+            }
+
             return A;
+        }
+
+
+        public static Vector Interpolate(Vector y_knots, Grid grid, int degree, double h)
+        {
+            if (degree == 2) return y_knots;
+            Matrix A = CreateInterpolationMatrix(grid, h, degree);
+            double EPS = 0.0001d;
+            Vector coefs = Solver.BCGSTAB(A, y_knots, EPS);
+
+            return coefs;
+        }
+
+
+
+        public static double CalculateCardinalSpline(double x, Vector c, double a, double h, int degree)
+        {
+            if (x < a) return 0d;
+            int index = (int)Math.Floor((x - a) / h);
+            double S = 0d;
+
+            if (index < degree - 1)
+            {
+              
+            }
         }
 
     }

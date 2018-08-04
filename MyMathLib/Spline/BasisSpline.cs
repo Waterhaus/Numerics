@@ -232,6 +232,7 @@ namespace MyMathLib
             return S;
         }
 
+
         public double FastCalculateSpline(double x)
         {
             double S = 0d;
