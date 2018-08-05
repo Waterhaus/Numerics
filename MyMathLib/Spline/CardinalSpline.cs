@@ -79,7 +79,7 @@ namespace MyMathLib
             for (int i = 0; i < degree - 1; i++)
             {
                 mas[i] = Cardinal(degree, (i+1)*h, 0, h);
-                Console.Write(mas[i] + Environment.NewLine);
+               
             }
 
             
@@ -97,10 +97,10 @@ namespace MyMathLib
             {
                 for (int i = 0; i + j < mas.Length; i++)
                 {
-                    A[j - 1, N - degree + 1 + i + j] = mas[i + j - 1];
+                    A[j - 1, N - degree + 1 + i + j] = mas[i];
                 }
             }
-
+            
             return A;
         }
 
@@ -108,7 +108,9 @@ namespace MyMathLib
         public static Vector Interpolate(Vector y_knots, Grid grid, int degree, double h)
         {
             if (degree == 2) return y_knots;
+           
             Matrix A = CreateInterpolationMatrix(grid, h, degree);
+            //Console.WriteLine(A);
             double EPS = 0.0001d;
             Vector coefs = Solver.BCGSTAB(A, y_knots, EPS);
 
@@ -116,17 +118,38 @@ namespace MyMathLib
         }
 
 
-
+        public static double GetCoef(int index, Vector c)
+        {
+            if (index < 0) return c[c.Length + index];
+            return c[index];
+        }
         public static double CalculateCardinalSpline(double x, Vector c, double a, double h, int degree)
         {
             if (x < a) return 0d;
-            int index = (int)Math.Floor((x - a) / h);
+            int index = (int)Math.Floor((x - a + h/100d) / h);
             double S = 0d;
 
-            if (index < degree - 1)
+            for (int i = index - degree + 2; i <= index; i++)
             {
-              
+               // Console.Write(Cardinal(degree, x, a + (i - 1) * h, h).ToString("0.000") + " ");
+              //  Console.Write(GetCoef(i, c).ToString("0.000") + " ");
+               // Console.Write("; ");
+                S = S + GetCoef(i, c) * Cardinal(degree, x, a + (i - 1) * h, h);
             }
+           // Console.WriteLine("S = " + S + Environment.NewLine);
+            return S;
+        }
+
+        public static Vector GetVectorFunction(int GridSize, double a_border, double b_border, Vector c, double t_0, double step, int degree)
+        {
+            Vector f = new Vector(GridSize);
+            double h = MyMath.Basic.GetStep(GridSize, a_border, b_border);
+
+            for (int i = 0; i < GridSize; i++)
+            {
+                f[i] = CalculateCardinalSpline(a_border + i * h,c,t_0,step,degree);
+            }
+            return f;
         }
 
     }
