@@ -82,22 +82,24 @@ namespace MyMathLib
                
             }
 
-            
+            int N = tau.OriginalCount - 1;
+            int p = degree - 1;
             for (int i = 0; i < tau.OriginalCount; i++)
             {
                 for (int j = 0; j < tau.OriginalCount; j++)
                 {
-                   
+                    if(!(j > N - p + 1 && i > N - p + 1))
                     A[i, j] = Cardinal(degree,tau.GetOrigin(j)+(degree - 1)*h, tau.GetOrigin(i),h);
                 }
             }
 
-            int N = A.Length.n;
+            N = A.Length.n;
             for (int j = 1; j < mas.Length; j++)
             {
                 for (int i = 0; i + j < mas.Length; i++)
                 {
                     A[j - 1, N - degree + 1 + i + j] = mas[i];
+                    A[N - degree + 1 + i + j, j - 1] = mas[i];
                 }
             }
             
@@ -110,8 +112,8 @@ namespace MyMathLib
             if (degree == 2) return y_knots;
            
             Matrix A = CreateInterpolationMatrix(grid, h, degree);
-            //Console.WriteLine(A);
-            double EPS = 0.0001d;
+            Console.WriteLine(A);
+            double EPS = 0.000001d;
             Vector coefs = Solver.BCGSTAB(A, y_knots, EPS);
 
             return coefs;

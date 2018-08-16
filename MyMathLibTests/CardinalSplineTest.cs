@@ -35,7 +35,7 @@ namespace MyMathLib
             double EPS = 0.1d;
             double a = 0d;
             double b = 1d;
-            int GridSize = 60;
+            int GridSize = 15;
             int deg = 4;
             Vector grid = Vector.CreateUniformGrid(GridSize, a, b);
             double h = MyMath.Basic.GetStep(GridSize, a, b);
