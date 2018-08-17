@@ -82,22 +82,24 @@ namespace MyMathLib
                
             }
 
-            
+            int N = tau.OriginalCount - 1;
+            int p = degree - 1;
             for (int i = 0; i < tau.OriginalCount; i++)
             {
                 for (int j = 0; j < tau.OriginalCount; j++)
                 {
-                   
+                    if(!(j > N - p + 1 && i > N - p + 1))
                     A[i, j] = Cardinal(degree,tau.GetOrigin(j)+(degree - 1)*h, tau.GetOrigin(i),h);
                 }
             }
 
-            int N = A.Length.n;
+            N = A.Length.n;
             for (int j = 1; j < mas.Length; j++)
             {
                 for (int i = 0; i + j < mas.Length; i++)
                 {
                     A[j - 1, N - degree + 1 + i + j] = mas[i];
+                    A[N - degree + 1 + i + j, j - 1] = mas[i];
                 }
             }
             
@@ -110,8 +112,8 @@ namespace MyMathLib
             if (degree == 2) return y_knots;
            
             Matrix A = CreateInterpolationMatrix(grid, h, degree);
-            //Console.WriteLine(A);
-            double EPS = 0.0000000001d;
+            Console.WriteLine(A);
+            double EPS = 0.000001d;
             Vector coefs = Solver.BCGSTAB(A, y_knots, EPS);
 
             return coefs;
@@ -121,6 +123,14 @@ namespace MyMathLib
         public static double GetCoef(int index, Vector c)
         {
             if (index < 0) return c[c.Length + index];
+            return c[index];
+        }
+
+        public static double GetCoef(int index,int degree, Vector c)
+        {
+            int p = degree - 2;
+            if (index < 0) return c[c.Length + index];
+            if (index >= c.Length - p) return c[index - c.Length + p];
             return c[index];
         }
         public static double CalculateCardinalSpline(double x, Vector c, double a, double h, int degree)
@@ -134,7 +144,7 @@ namespace MyMathLib
                // Console.Write(Cardinal(degree, x, a + (i - 1) * h, h).ToString("0.000") + " ");
               //  Console.Write(GetCoef(i, c).ToString("0.000") + " ");
                // Console.Write("; ");
-                S = S + GetCoef(i, c) * Cardinal(degree, x, a + (i - 1) * h, h);
+                S = S + GetCoef(i, degree,c) * Cardinal(degree, x, a + (i - 1) * h, h);
             }
            // Console.WriteLine("S = " + S + Environment.NewLine);
             return S;
