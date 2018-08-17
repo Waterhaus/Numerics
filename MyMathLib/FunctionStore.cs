@@ -77,5 +77,10 @@ namespace MyMathLib
             return 0d;
         }
 
+        public static double test_func1(double t)
+        {
+            return t * (10d - t) * Math.Exp(3d * t - t * t / 10d);
+        }
+
     }
 }

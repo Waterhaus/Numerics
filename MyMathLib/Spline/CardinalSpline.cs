@@ -111,7 +111,7 @@ namespace MyMathLib
            
             Matrix A = CreateInterpolationMatrix(grid, h, degree);
             //Console.WriteLine(A);
-            double EPS = 0.0001d;
+            double EPS = 0.0000000001d;
             Vector coefs = Solver.BCGSTAB(A, y_knots, EPS);
 
             return coefs;

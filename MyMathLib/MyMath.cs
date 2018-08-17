@@ -204,6 +204,28 @@ namespace MyMathLib
 
             }
 
+
+            public static Vector Reflect(Vector v)
+            {
+                Vector u = new Vector(2*v.Length);
+
+                for (int i = 0; i < v.Length; i++)
+                {
+                    u[i] = v[i];
+                    u[u.Length - 1 - i] = v[i];
+                }
+                return u;
+            }
+            public static Vector Deflect(Vector v)
+            {
+                Vector u = new Vector(v.Length / 2);
+
+                for (int i = 0; i < u.Length; i++)
+                {
+                    u[i] = v[i];
+                }
+                return u;
+            }
         }
 
 
