@@ -125,6 +125,14 @@ namespace MyMathLib
             if (index < 0) return c[c.Length + index];
             return c[index];
         }
+
+        public static double GetCoef(int index,int degree, Vector c)
+        {
+            int p = degree - 2;
+            if (index < 0) return c[c.Length + index];
+            if (index >= c.Length - p) return c[index - c.Length + p];
+            return c[index];
+        }
         public static double CalculateCardinalSpline(double x, Vector c, double a, double h, int degree)
         {
             if (x < a) return 0d;
@@ -136,7 +144,7 @@ namespace MyMathLib
                // Console.Write(Cardinal(degree, x, a + (i - 1) * h, h).ToString("0.000") + " ");
               //  Console.Write(GetCoef(i, c).ToString("0.000") + " ");
                // Console.Write("; ");
-                S = S + GetCoef(i, c) * Cardinal(degree, x, a + (i - 1) * h, h);
+                S = S + GetCoef(i, degree,c) * Cardinal(degree, x, a + (i - 1) * h, h);
             }
            // Console.WriteLine("S = " + S + Environment.NewLine);
             return S;
