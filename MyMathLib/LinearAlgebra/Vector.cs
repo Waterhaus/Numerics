@@ -221,6 +221,14 @@ namespace MyMathLib
             return s;
         }
 
+        public string ToString(string str)
+        {
+            string s = "< ";
+            for (int i = 0; i < length; i++)
+                s += v[i].ToString(str) + " ,";
+            s += " >";
+            return s;
+        }
         public static Vector RandomVector(int n)
         {
             Vector v = new Vector(n);
