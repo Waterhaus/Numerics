@@ -50,7 +50,7 @@ namespace MyMathLib
             Console.WriteLine("Ac = " + A*c);
             Console.WriteLine("Степень сплайна = " + deg);
             //compare
-            int N = 2*GridSize;
+            int N = 2*GridSize + 1;
             Vector expect = MyMath.Basic.GetVectorFunction(N, a, b, FunctionLib.sin);
             Vector actual = CardinalSpline.GetVectorFunction(N, a, b,c,a,h,deg);
 

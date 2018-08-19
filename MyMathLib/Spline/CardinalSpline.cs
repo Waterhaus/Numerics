@@ -136,10 +136,10 @@ namespace MyMathLib
         public static double CalculateCardinalSpline(double x, Vector c, double a, double h, int degree)
         {
             if (x < a) return 0d;
-            int index = (int)Math.Floor((x - a + h/100d) / h);
+            int index = (int)Math.Floor((x - a + h/100d) / h) + 1;
             double S = 0d;
 
-            for (int i = index - degree + 2; i <= index; i++)
+            for (int i = index - degree + 1; i <= index; i++)
             {
                // Console.Write(Cardinal(degree, x, a + (i - 1) * h, h).ToString("0.000") + " ");
               //  Console.Write(GetCoef(i, c).ToString("0.000") + " ");
