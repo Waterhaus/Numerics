@@ -54,6 +54,95 @@ namespace MyMathLib.Spline
 
         }
 
+
+        public static Matrix CreateInterpolationMatrix(double[] ksi, int size)
+        {
+            int N = size;
+            int p = ksi.Length + 1;
+            Matrix A = new Matrix(N, N + p - 2);
+
+            for (int i = 0; i < N; i++)
+            {
+                for (int j = 0; j < ksi.Length; j++)
+                {
+                    A[i, i + j] = ksi[j];
+                }
+            }
+            return A;
+
+        }
+
+        public static Matrix CreateKSIMatrix(int degree,double h, int size)
+        {
+            int N = size;
+            int p = degree;
+            double[] ksi = GetCardinalValue(2 * degree, h);
+            Console.WriteLine("deg = " + 2 * degree + " ksi = " + new Vector(ksi).ToString("0.000000"));
+            ksi[degree - 1] = 2 * ksi[degree - 1];
+            Matrix A = new Matrix(N + p - 2, N + p - 2);
+           
+            for (int i = 0; i < N + p - 2; i++)
+            {
+                for (int j = 0; j < ksi.Length; j++)
+                {
+                    if(i + j - p + 1 >= 0 && i + j - p + 1 < N + p - 2)
+                    A[i, i + j - p + 1] = ksi[j];
+                }
+            }
+            return A;
+
+        }
+
+        public static Matrix MinInterpolationMatrix2(int degree, double h, int size)
+        {
+            double[] ksi_p = GetCardinalValue(degree, h);
+            Matrix B = CreateInterpolationMatrix(ksi_p, size);
+            Matrix KSI = CreateKSIMatrix(degree, h, size);
+
+            int N = size;
+            int p = degree;
+
+            Matrix S = new Matrix(2 * N + p - 2);
+
+            for (int i = 0; i < N ; i++)
+            {
+                for (int j = 0; j < N + p - 2; j++)
+                {
+                    S[i, j] = B[i, j];
+                    S[N + j, N + p - 2 + i] = -B[i, j];
+                }
+            }
+
+            for (int i = 0; i < N + p - 2; i++)
+            {
+                for (int j = 0; j < N + p - 2; j++)
+                {
+                    S[N + i, j] = KSI[i, j];
+                }
+            }
+
+            return S;
+
+        }
+
+        public static Vector MIN_Interpolate(Vector y_knots, int degree, double h)
+        {
+            int N = y_knots.Length;
+            int p = degree;
+            Vector b = new Vector(2 *N + p - 2);
+            for (int i = 0; i < y_knots.Length; i++)
+            {
+                b[i] = y_knots[i];
+            }
+            Matrix A = MinInterpolationMatrix2(degree, h, N);
+           // Console.WriteLine(A);
+            double EPS = 0.0000001d;
+            Vector coefs = Solver.BCGSTAB(A, b, EPS);
+
+            return coefs;
+        }
+
+
         public static Matrix MinInterpolationMatrix(int degree, double h, int size)
         {
             double[] ksi_p = GetCardinalValue(degree, h);

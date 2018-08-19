@@ -112,7 +112,7 @@ namespace MyMathLib
             if (degree == 2) return y_knots;
            
             Matrix A = CreateInterpolationMatrix(grid, h, degree);
-            Console.WriteLine(A);
+           // Console.WriteLine(A);
             double EPS = 0.000001d;
             Vector coefs = Solver.BCGSTAB(A, y_knots, EPS);
 
@@ -148,6 +148,38 @@ namespace MyMathLib
             }
            // Console.WriteLine("S = " + S + Environment.NewLine);
             return S;
+        }
+
+        public static double CalculateSpline(double x, Vector c, double a, double h, int degree)
+        {
+
+            int p = degree;
+            if (x < a) return 0d;
+            int index = (int)Math.Floor((x - a + h / 100d) / h);
+            double S = 0d;
+
+            for (int i = index - p + 1; i <= index; i++)
+            {
+                // Console.Write(Cardinal(degree, x, a + (i - 1) * h, h).ToString("0.000") + " ");
+                //  Console.Write(GetCoef(i, c).ToString("0.000") + " ");
+                // Console.Write("; ");
+                S = S + c[i + p - 1] * Cardinal(degree, x, a + (i) * h, h);
+            }
+            // Console.WriteLine("S = " + S + Environment.NewLine);
+            return S;
+        }
+
+
+        public static Vector GetVectorFunctionSpline(int GridSize, double a_border, double b_border, Vector c, double t_0, double step, int degree)
+        {
+            Vector f = new Vector(GridSize);
+            double h = MyMath.Basic.GetStep(GridSize, a_border, b_border);
+
+            for (int i = 0; i < GridSize; i++)
+            {
+                f[i] = CalculateSpline(a_border + i * h, c, t_0, step, degree);
+            }
+            return f;
         }
 
         public static Vector GetVectorFunction(int GridSize, double a_border, double b_border, Vector c, double t_0, double step, int degree)
