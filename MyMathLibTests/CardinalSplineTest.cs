@@ -109,7 +109,7 @@ namespace MyMathLib
 
 
             //run
-            Matrix A = Spline.InterpolateExperiment.MinInterpolationMatrix2(degree, h, size);
+            Matrix A = Spline.InterpolateExperiment.Create_LagrangeInterpolationMatrix(degree, h, size);
             Console.WriteLine(A);
         }
         [TestMethod]
