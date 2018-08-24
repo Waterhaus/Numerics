@@ -135,7 +135,6 @@ namespace MyMathLib.Spline
                 b[i] = y_knots[i];
             }
             Matrix A = MinInterpolationMatrix2(degree, h, N);
-           // Console.WriteLine(A);
             double EPS = 0.0000001d;
             Vector coefs = Solver.BCGSTAB(A, b, EPS);
 
