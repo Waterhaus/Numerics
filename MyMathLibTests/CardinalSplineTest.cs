@@ -83,6 +83,24 @@ namespace MyMathLib
             Console.WriteLine(A);
         }
 
+
+        [TestMethod]
+        public void MultiplyBSplineMatrixTest()
+        {
+            //setup
+            int degree = 4;
+            int size = 9;
+            double h = 1;
+            double[] ksi = Spline.InterpolateExperiment.GetCardinalValue(degree, h);
+            Matrix A = Spline.InterpolateExperiment.CreateInterpolationMatrix(ksi, size);
+            Vector one = Vector.GetConstVector(1d, size + degree - 2);
+            //run
+            double result = (A * one - Spline.InterpolateExperiment.MultiplyBSplineMatrix(one, degree, h, size)).Norm;
+
+            //compare
+            Assert.AreEqual(0d, result, 0.000001, "Функции не эквивалентны!");
+        }
+
         [TestMethod]
         public void CreateKSIMatrixTest()
         {
@@ -98,6 +116,24 @@ namespace MyMathLib
             Console.WriteLine(A);
         }
 
+
+        [TestMethod]
+        public void MultiplyKSIMatrixTest()
+        {
+            //setup
+            int degree = 2;
+            int size = 9;
+            double h = 1;
+            Matrix A = Spline.InterpolateExperiment.CreateKSIMatrix(degree, h, size);
+            Vector one = Vector.GetConstVector(1, size);
+
+            //run
+            double result = (A * one - Spline.InterpolateExperiment.MultiplyKSIMatrix(one, degree, h, size)).Norm;
+
+            //compare
+            Assert.AreEqual(0d, result, 0.000001, "Функции не эквивалентны!");
+        }
+
         [TestMethod]
         public void Create_InterpolationMatrix_Test()
         {
@@ -109,21 +145,42 @@ namespace MyMathLib
 
 
             //run
-            Matrix A = Spline.InterpolateExperiment.MinInterpolationMatrix2(degree, h, size);
+            Matrix A = Spline.InterpolateExperiment.Create_LagrangeInterpolationMatrix(degree, h, size);
             Console.WriteLine(A);
         }
+
+        [TestMethod]
+        public void MultiplyLagrangeMatrixTest()
+        {
+            //setup
+            int degree = 4;
+            int size = 3000;
+            double h = 0.0001d;
+            
+            Matrix A = Spline.InterpolateExperiment.Create_LagrangeInterpolationMatrix(degree, h, size);
+            Vector one = Vector.GetConstVector(1d, 2*size + degree - 2);
+            Vector r = Vector.RandomVector(2 * size + degree - 2);
+            //run
+            Vector anser = A * r - Spline.InterpolateExperiment.Multiply_LagrangeInterpolationMatrix(r, degree, h, size);
+            double result = (anser).Norm;
+            Console.WriteLine((A*r).Norm);
+            //compare
+            Console.WriteLine("result = " + result);
+            Assert.AreEqual(0d, result, 0.000001d, "Функции не эквивалентны!");
+        }
+
         [TestMethod]
         public void MIN_Interpolation_Test()
         {
             //setup
             double EPS = 0.1d;
             double a = 0d;
-            double b = 10*Math.PI;
-            int GridSize = 40;
+            double b = Math.PI;
+            int GridSize = 100;
             int deg = 4;
             Vector grid = Vector.CreateUniformGrid(GridSize, a, b);
             double h = MyMath.Basic.GetStep(GridSize, a, b);
-            Vector y = MyMath.Basic.GetVectorFunction(GridSize, a, b, FunctionLib.sin);
+            Vector y = MyMath.Basic.GetVectorFunction(GridSize, a, b, FunctionLib.tttsin);
             Grid tau = new Grid(deg, grid, grid[0], grid.Last, true);
             tau.ToPeriodiclineGrid();
             //run
@@ -134,8 +191,8 @@ namespace MyMathLib
             Console.WriteLine("min_c = " + min_c);
             Console.WriteLine("Степень сплайна = " + deg);
             //compare
-            int N = 10 * GridSize;
-            Vector expect = MyMath.Basic.GetVectorFunction(N - 1, a, b, FunctionLib.sin);
+            int N = 2 * GridSize;
+            Vector expect = MyMath.Basic.GetVectorFunction(N - 1, a, b, FunctionLib.tttsin);
             Vector actual = CardinalSpline.GetVectorFunctionSpline(N - 1, a, b, min_c, a, h, deg);
 
             Vector bf = CardinalSpline.GetVectorFunctionSpline(GridSize, a, b, min_c, a, h, deg);
@@ -150,9 +207,49 @@ namespace MyMathLib
             //Console.WriteLine("exp - act = " + (expect - actual).ToString());
             Console.WriteLine("||c|| = " + min_c.Norm.ToString("0.000000"));
             Console.WriteLine("||f - spline|| = " + result.ToString("0.000000"));
-            //Assert.AreEqual(0, interpolation, EPS, "Плохая интерполяция!");
+            Assert.AreEqual(0, interpolation, EPS, "Плохая интерполяция!");
         }
 
+        [TestMethod]
+        public void Quick_Interpolation_Test()
+        {
+            //setup
+            double EPS = 0.1d;
+            double a = 0d;
+            double b =  Math.PI;
+            int GridSize = 18;
+            int deg = 4;
+            Vector grid = Vector.CreateUniformGrid(GridSize, a, b);
+            double h = MyMath.Basic.GetStep(GridSize, a, b);
+            Vector y = MyMath.Basic.GetVectorFunction(GridSize, a, b, FunctionLib.sin);
+            Grid tau = new Grid(deg, grid, grid[0], grid.Last, true);
+            tau.ToPeriodiclineGrid();
+            //run
+            //Vector c = CardinalSpline.Interpolate(y, tau, deg, h);
+
+            Vector min_c = Spline.InterpolateExperiment.Quick_Interpolate(y, deg, h);
+            // Console.WriteLine("c = " + c);
+            Console.WriteLine("min_c = " + min_c);
+            Console.WriteLine("Степень сплайна = " + deg);
+            //compare
+            int N = 10 * GridSize;
+            Vector expect = MyMath.Basic.GetVectorFunction(N - 1, a, b, FunctionLib.sin);
+            Vector actual = CardinalSpline.GetVectorFunctionSpline(N - 1, a, b, min_c, a, h, deg);
+
+            Vector bf = CardinalSpline.GetVectorFunctionSpline(GridSize, a, b, min_c, a, h, deg);
+
+
+            double result = (expect - actual).Norm;
+            double interpolation = (y - bf).Norm;
+
+
+            Console.WriteLine("значение f(x) = " + y.ToString());
+            Console.WriteLine("значение bf(x) = " + bf.ToString());
+            //Console.WriteLine("exp - act = " + (expect - actual).ToString());
+            Console.WriteLine("||c|| = " + min_c.Norm.ToString("0.000000"));
+            Console.WriteLine("||f - spline|| = " + result.ToString("0.000000"));
+            Assert.AreEqual(0, interpolation, EPS, "Плохая интерполяция!");
+        }
 
 
         [TestMethod]

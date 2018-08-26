@@ -235,7 +235,7 @@ namespace MyMathLib
             Random r = new Random();
 
             for (int i = 0; i < n; i++)
-                v[i] = r.Next(0, 20);
+                v[i] = r.Next(0, 20)/1000d;
 
             return v;
         }

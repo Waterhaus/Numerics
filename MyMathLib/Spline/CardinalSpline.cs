@@ -158,12 +158,12 @@ namespace MyMathLib
             int index = (int)Math.Floor((x - a + h / 100d) / h);
             double S = 0d;
 
-            for (int i = index - p + 1; i <= index; i++)
+            for (int i = index - p + 2; i <= index; i++)
             {
                 // Console.Write(Cardinal(degree, x, a + (i - 1) * h, h).ToString("0.000") + " ");
                 //  Console.Write(GetCoef(i, c).ToString("0.000") + " ");
                 // Console.Write("; ");
-                S = S + c[i + p - 1] * Cardinal(degree, x, a + (i) * h, h);
+                S = S + c[i + p - 2] * Cardinal(degree, x, a + (i - 1) * h, h);
             }
             // Console.WriteLine("S = " + S + Environment.NewLine);
             return S;
