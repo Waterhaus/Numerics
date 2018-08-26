@@ -176,11 +176,11 @@ namespace MyMathLib
             double EPS = 0.1d;
             double a = 0d;
             double b = Math.PI;
-            int GridSize = 100;
+            int GridSize = 200;
             int deg = 4;
             Vector grid = Vector.CreateUniformGrid(GridSize, a, b);
             double h = MyMath.Basic.GetStep(GridSize, a, b);
-            Vector y = MyMath.Basic.GetVectorFunction(GridSize, a, b, FunctionLib.tttsin);
+            Vector y = MyMath.Basic.GetVectorFunction(GridSize, a, b, FunctionLib.sin);
             Grid tau = new Grid(deg, grid, grid[0], grid.Last, true);
             tau.ToPeriodiclineGrid();
             //run
@@ -192,7 +192,7 @@ namespace MyMathLib
             Console.WriteLine("Степень сплайна = " + deg);
             //compare
             int N = 2 * GridSize;
-            Vector expect = MyMath.Basic.GetVectorFunction(N - 1, a, b, FunctionLib.tttsin);
+            Vector expect = MyMath.Basic.GetVectorFunction(N - 1, a, b, FunctionLib.sin);
             Vector actual = CardinalSpline.GetVectorFunctionSpline(N - 1, a, b, min_c, a, h, deg);
 
             Vector bf = CardinalSpline.GetVectorFunctionSpline(GridSize, a, b, min_c, a, h, deg);
@@ -377,6 +377,14 @@ namespace MyMathLib
             //Console.WriteLine("f - bf = " + (bf - y));
             //Console.WriteLine("||f - spline|| = " + result.ToString("0.0000"));
             Assert.AreEqual(0, interpolation, EPS, "Плохая интерполяция!");
+        }
+
+        [TestMethod]
+        public void GetCoef_2h_Test()
+        {
+            int degree = 6;
+            Vector c = Spline.InterpolateExperiment.GetCoef_2h(degree);
+            Console.WriteLine("c = " + c);
         }
     }
 }

@@ -20,6 +20,35 @@ namespace MyMathLib.Spline
             return mas;
         }
 
+        public static Vector GetCoef_2h(int degree)
+        {
+            double[] ksi = GetCardinalValue(degree, 1d);
+            Matrix A = new Matrix(degree + 1);
+            Vector y = new Vector(degree + 1);
+
+            for (int i = 0; i < y.Length; i++)
+            {
+                y[i] = CardinalSpline.Cardinal(degree, i + 1, 0d, 2d);
+            }
+
+            for (int i = 0; i < degree + 1; i++)
+            {
+                for (int j = 0; j < ksi.Length; j++)
+                {
+                    if(i - j >= 0 )
+                    A[i, i - j] = ksi[ksi.Length - 1 - j];
+                }
+            }
+            Matrix A_t = Matrix.transpose(A);
+            Console.WriteLine("y = " + y);
+            Console.WriteLine("A_T*A = " + A);
+            
+            Vector c = new Vector();
+            c = Solver.BCGSTAB(A,  y, 0.0000001d);
+            Console.WriteLine( "SUM c  = " + MyMath.Basic.SumArray(c.ToArray) ); 
+            return c;
+        }
+
         public static Matrix CreatePeriodicInterpolationMatrix(double[] ksi, int size)
         {
             int degree = ksi.Length + 1;
@@ -174,17 +203,46 @@ namespace MyMathLib.Spline
 
         }
 
+        public static Vector CalculateSkal(Vector f, int degree, double h)
+        {
+            int N = f.Length;
+            int p = degree;
+            double[] ksi = GetCardinalValue(degree, h);
+            Vector I = new Vector(N + p - 2);
 
+            for (int i = 0; i < f.Length; i++)
+            {
+                for (int j = 0; j < ksi.Length; j++)
+                {
+                   // Console.WriteLine(" i - j = " + (i - j) + " ksi.Length - 1 - j = " + (ksi.Length - 1 - j));
+                    if (i - j >= 0)
+                    I[i] += 2.0*f[i - j] * ksi[ksi.Length - 1 - j]*h;
+                    
+                }
+                //Console.WriteLine("i = " + i + " INTEGR = " + I[i] );
+
+            }
+            return I;
+        }
 
         public static Vector MIN_Interpolate(Vector y_knots, int degree, double h)
         {
             int N = y_knots.Length;
             int p = degree;
             Vector b = new Vector(2 *N + p - 2);
-            for (int i = 0; i < y_knots.Length; i++)
+            for (int i = 0; i < N; i++)
             {
                 b[i] = y_knots[i];
             }
+            Vector I = CalculateSkal(y_knots, degree, h);
+    
+            for (int i = N; i < b.Length; i++)
+            {
+                
+                    b[i] = I[i - N];
+                
+            }
+
             Matrix A = Create_LagrangeInterpolationMatrix(degree, h, N);
            // 
             double EPS = 0.0000001d;
@@ -412,5 +470,8 @@ namespace MyMathLib.Spline
 
             return c;
         }
+
+
+
     }
 }
