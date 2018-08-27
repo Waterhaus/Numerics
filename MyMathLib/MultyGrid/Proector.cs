@@ -72,7 +72,44 @@ namespace MyMathLib.MultyGrid
 
         }
 
-        
+        public static Vector spline4_r(Vector v_h)
+        {
+            int N = 0;
+            double[] coef = new double[5];
+            
+            coef[0] = 0.0625d;
+            coef[1] = 0.25d;
+            coef[2] = 0.375d;
+            coef[3] = 0.25d;
+            coef[4] = 0.0625d;
+            if (v_h.Length % 2 != 0)
+            {
+                Console.WriteLine("Предупреждеие! Размерность вектора не делится на 2");
+                return new Vector();
+            }
+            else
+                N = v_h.Length / 2;
+
+            Vector v_2h = new Vector(N);
+            v_2h[0] = 0;
+            int k = 0;
+
+            int N_1 = N - 1;
+            int N_2 = v_h.Length - 1;
+
+            v_2h[0] = (coef[0] + coef[1] + coef[2]) * v_h[0] + coef[3] * v_h[1] + coef[4] * v_h[2];
+
+            v_2h[N_1] = (coef[4] + coef[3] + coef[2]) * v_h[N_2] + coef[1] * v_h[N_2 - 1] + coef[0] * v_h[N_2 - 2];
+
+            for (int i = 1; i < v_2h.Length - 1; i++)
+            {
+                k += 2;
+                v_2h[i] =coef[0]*v_h[k-2] + coef[1]*v_h[k-1] + coef[2] * v_h[k] + coef[3] * v_h[k + 1] + coef[4] * v_h[k + 2];
+            }
+            return v_2h;
+
+        }
+ 
 
         public static Vector slow_spline_r(Vector v_h)
         {
