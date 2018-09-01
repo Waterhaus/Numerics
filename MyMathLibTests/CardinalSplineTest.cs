@@ -180,19 +180,19 @@ namespace MyMathLib
             int deg = 4;
             Vector grid = Vector.CreateUniformGrid(GridSize, a, b);
             double h = MyMath.Basic.GetStep(GridSize, a, b);
-            Vector y = MyMath.Basic.GetVectorFunction(GridSize, a, b, FunctionLib.sin);
+            Vector y = MyMath.Basic.GetVectorFunction(GridSize, a, b, FunctionLib.one_minus_t_sin);
             Grid tau = new Grid(deg, grid, grid[0], grid.Last, true);
             tau.ToPeriodiclineGrid();
             //run
             //Vector c = CardinalSpline.Interpolate(y, tau, deg, h);
 
-            Vector min_c = Spline.InterpolateExperiment.MIN_Interpolate(y, deg, h);
+            Vector min_c = Spline.InterpolateExperiment.Interpolate_By_CardinalSpline(y, deg, h);
            // Console.WriteLine("c = " + c);
             Console.WriteLine("min_c = " + min_c);
             Console.WriteLine("Степень сплайна = " + deg);
             //compare
-            int N = 2 * GridSize;
-            Vector expect = MyMath.Basic.GetVectorFunction(N - 1, a, b, FunctionLib.sin);
+            int N = 10 * GridSize;
+            Vector expect = MyMath.Basic.GetVectorFunction(N - 1, a, b, FunctionLib.one_minus_t_sin);
             Vector actual = CardinalSpline.GetVectorFunctionSpline(N - 1, a, b, min_c, a, h, deg);
 
             Vector bf = CardinalSpline.GetVectorFunctionSpline(GridSize, a, b, min_c, a, h, deg);

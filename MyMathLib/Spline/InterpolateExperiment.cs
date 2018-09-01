@@ -195,7 +195,7 @@ namespace MyMathLib.Spline
             {
                 for (int j = 0; j < N + p - 2; j++)
                 {
-                    S[N + i, j] = KSI[i, j];
+                    S[N + i, j] = h*KSI[i, j];
                 }
             }
 
@@ -225,7 +225,7 @@ namespace MyMathLib.Spline
             return I;
         }
 
-        public static Vector MIN_Interpolate(Vector y_knots, int degree, double h)
+        public static Vector Interpolate_By_CardinalSpline(Vector y_knots, int degree, double h)
         {
             int N = y_knots.Length;
             int p = degree;
@@ -472,6 +472,45 @@ namespace MyMathLib.Spline
         }
 
 
+
+        public static void MIN_Interpolation_Test(FunctionLib.Function func, ref Vector x ,ref Vector expect, ref Vector actual, int degree, int Size, double a_border, double b_border)
+        {
+            //setup
+            
+            double a = a_border;
+            double b = b_border;
+            int GridSize = Size;
+            int deg = degree;
+            Vector grid = Vector.CreateUniformGrid(GridSize, a, b);
+            double h = MyMath.Basic.GetStep(GridSize, a, b);
+            Vector y = MyMath.Basic.GetVectorFunction(GridSize, a, b, func);
+            Grid tau = new Grid(deg, grid, grid[0], grid.Last, true);
+            tau.ToPeriodiclineGrid();
+            //run
+  
+
+            Vector min_c = Spline.InterpolateExperiment.Interpolate_By_CardinalSpline(y, deg, h);
+            // Console.WriteLine("c = " + c);
+            Console.WriteLine("min_c = " + min_c);
+            Console.WriteLine("Степень сплайна = " + deg);
+            //compare
+            int N = 10 * GridSize;
+            expect = MyMath.Basic.GetVectorFunction(N - 1, a, b, func);
+            actual = CardinalSpline.GetVectorFunctionSpline(N - 1, a, b, min_c, a, h, deg);
+            x = Vector.CreateUniformGrid(N - 1, a, b);
+            Vector bf = CardinalSpline.GetVectorFunctionSpline(GridSize, a, b, min_c, a, h, deg);
+
+
+            double result = (expect - actual).Norm;
+            double interpolation = (y - bf).Norm;
+
+
+            Console.WriteLine("значение f(x) = " + y.ToString());
+            Console.WriteLine("значение bf(x) = " + bf.ToString());
+            Console.WriteLine("||c|| = " + min_c.Norm.ToString("0.000000"));
+            Console.WriteLine("||f - spline|| = " + result.ToString("0.000000"));
+         
+        }
 
     }
 }
