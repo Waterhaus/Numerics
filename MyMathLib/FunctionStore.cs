@@ -35,10 +35,20 @@ namespace MyMathLib
             return 1d;
 
         }
+        public static double line(double t)
+        {
+            return t;
+
+        }
 
         public static double sin(double t)
         {
             return Math.Sin(t);
+        }
+
+        public static double cos(double t)
+        {
+            return Math.Cos(t);
         }
 
         public static double tsin(double t)
