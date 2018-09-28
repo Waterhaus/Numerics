@@ -33,17 +33,22 @@ namespace MyMathLib.Spline
             int N = y_knots.Length;
             int p = degree;
 
-            Vector b = InterpolateExperiment.CalculateSkal(y_knots, degree, h);
+            Vector b = InterpolateExperiment.CalculateSkalExtendet(y_knots, degree, h);
 
 
 
             Matrix Ah = Create_Ah(degree, N + p - 2);
-            Console.WriteLine(Ah);
-            Console.WriteLine(b);
+
+            if (N < 23)
+            {
+                Console.WriteLine("matrix = " + Environment.NewLine + Ah);
+                Console.WriteLine("skal(y,psi) = " + b);
+
+            }
             // 
             double EPS = 0.0000001d;
             Vector c = Solver.BCGSTAB(Ah, b, EPS);
-            Console.WriteLine(c);
+            //Console.WriteLine("anser = " + c);
                      
             return c;
         }
@@ -59,7 +64,7 @@ namespace MyMathLib.Spline
             double h = MyMath.Basic.GetStep(GridSize, a, b);
             Vector y = MyMath.Basic.GetVectorFunction(GridSize, a, b, FunctionLib.line);
 
-            Vector c = MyMathLib.Spline.SplineDifferentiation.SolveDifEquation(y, deg, 1);
+            Vector c = MyMathLib.Spline.SplineDifferentiation.SolveDifEquation(y, deg, h);
             //
             
             int N = GridSize;
@@ -73,6 +78,38 @@ namespace MyMathLib.Spline
             Console.WriteLine("exp - act = " + (expect - actual).ToString());
             Console.WriteLine("||c|| = " + c.Norm.ToString("0.000000"));
             Console.WriteLine("||f - spline|| = " + result.ToString("0.000000"));
+
+        }
+
+        public static void Solve_Test(ref Vector x, ref Vector expect, ref Vector actual,
+                                        FunctionLib.Function G, FunctionLib.Function dG, 
+                                        int Size, int degree,double a_border, double b_border)
+        {
+
+            double a = a_border;
+            double b = b_border;
+            int GridSize = Size;
+            int deg = degree;
+            Vector grid = Vector.CreateUniformGrid(GridSize, a, b);
+            double h = MyMath.Basic.GetStep(GridSize, a, b);
+            Vector y = MyMath.Basic.GetVectorFunction(GridSize, a, b, G);
+
+            Vector c = MyMathLib.Spline.SplineDifferentiation.SolveDifEquation(y, deg, h);
+            //
+            Console.WriteLine("step = " + h);
+            int N = GridSize;
+            expect = MyMath.Basic.GetVectorFunction(N - 1, a, b, dG);
+            actual = CardinalSpline.GetVectorFunctionSpline(N - 1, a, b, c, a, h, deg);
+            x = Vector.CreateUniformGrid(N - 1, a, b);
+
+            Vector err = expect - actual;
+            double result = err.Norm;
+            double max = err.InfNorm;
+
+            Console.WriteLine("exp - act = " + (expect - actual).ToString());
+            Console.WriteLine("||c|| = " + c.Norm.ToString("0.000"));
+            Console.WriteLine("||f - spline|| = " + result.ToString("0.000"));
+            Console.WriteLine("max|f - spline| = " + max.ToString("0.000"));
 
         }
     }
