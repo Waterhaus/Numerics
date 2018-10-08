@@ -74,5 +74,68 @@ namespace MyMathLib
             return b;
 
         }
+
+
+        public static Vector solveSlice(Vector u_old, Vector f, FunctionLib.Function p, double nu, double h, double tau, double aa, int iter_t)
+        {
+            int n = u_old.Length;
+            Vector u_mid = new Vector(n);
+            Vector u_up = new Vector(n);
+            Vector u_down = new Vector(n);
+            Vector F = new Vector(n);
+            double left = -aa * tau / (h * h);
+            double right = -aa * tau / (h * h);
+            double middle = 1d + 2d * aa * tau / (h * h);
+
+            for (int i = 1; i < n - 1; i++)
+            {
+                F[i] = tau * f[i] + u_old[i];
+                u_mid[i] = middle;
+                u_up[i] = left;
+                u_down[i] = right;
+            }
+            u_down[0] = 0;
+            u_mid[0] = -1d / h;
+            u_up[0] = 1d / h;
+            F[0] = 0;
+
+            u_down[n - 1] = 1d / h;
+            u_mid[n - 1] = (-1d / h) + nu;
+            u_up[0] = 0;
+            F[0] = nu*p(iter_t*tau);
+
+            Vector u = Solver.TridiagonalMatrixAlgorithm(u_down, u_mid, u_up, F);
+            return u;
+
+        }
+
+
+        public static Vector getSolution(FunctionLib.Function p, FunctionLib.Function2d f, FunctionLib.Function phi,
+                                        double nu, double L, double TIME, 
+                                        double aa, int N, int M)
+        {
+            double h = MyMath.Basic.GetStep(N, 0d, L);
+            double tau = MyMath.Basic.GetStep(M, 0d, TIME);
+            Vector u0 = new Vector(N);
+            Vector fu = new Vector(N);
+
+            for (int i = 0; i < N; i++)
+            {
+                u0[i] = phi(i * h);
+                
+            }
+
+            for (int iter_t = 0; iter_t < M; iter_t++)
+            {
+                for (int i = 0; i < N; i++)
+                {
+                    fu[i] = f(i * h, iter_t * tau);
+                }
+                u0 = solveSlice(u0, fu, p, nu, h, tau, aa, iter_t);
+            }
+
+            return u0;
+
+        }
     }
 }
