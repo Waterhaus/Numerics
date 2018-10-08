@@ -12,6 +12,11 @@ namespace MyMathLib
         public delegate object UniFunction(object t);
         public delegate double MyFunctionDoubleDelegate(params object[] args);
 
+        public static double exp(double t)
+        {
+            return Math.Exp(t);
+        }
+
         public static double polinom_deg3_1(double t)
         {
             return t * (t - 4d) * (t - 4d);

@@ -48,7 +48,7 @@ namespace MyMathLib.Spline
             // 
             double EPS = 0.0000001d;
             Vector c = Solver.BCGSTAB(Ah, b, EPS);
-            //Console.WriteLine("anser = " + c);
+            Console.WriteLine("anser = " + c);
                      
             return c;
         }

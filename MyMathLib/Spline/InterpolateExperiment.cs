@@ -325,7 +325,7 @@ namespace MyMathLib.Spline
 
             //Console.WriteLine("skal = " + I);
             int s = degree - 1;
-            return (2.0*h) *I;
+            return (2.0) *I;
         }
 
         public static Vector Interpolate_By_CardinalSpline(Vector y_knots, int degree, double h)
