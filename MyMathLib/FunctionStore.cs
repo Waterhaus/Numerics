@@ -100,7 +100,7 @@ namespace MyMathLib
 
         public static double dificult_test(double t)
         {
-            double EPS = 0.021d;
+            double EPS = 0.0021d;
             double PI = Math.PI;
 
             return Math.Sqrt(EPS * (2d + EPS)) / (2.0 * PI * (1 + EPS - Math.Cos(t)));
