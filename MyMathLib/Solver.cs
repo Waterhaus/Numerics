@@ -158,5 +158,41 @@ namespace MyMathLib
                 }
             return x;
         }
+
+        /**
+* n - число уравнений (строк матрицы)
+* b - диагональ, лежащая над главной (нумеруется: [0;n-2])
+* c - главная диагональ матрицы A (нумеруется: [0;n-1])
+* a - диагональ, лежащая под главной (нумеруется: [1;n-1])
+* f - правая часть (столбец)
+* x - решение, массив x будет содержать ответ
+*/
+        public static Vector TridiagonalMatrixAlgorithm(Vector d_under, Vector d_main, Vector d_upper, Vector f)
+        {
+            int n = d_main.Length;
+            Vector x = new Vector(n);
+            double m;
+            d_under[0] = 0;
+           // d_upper.Last = 0;
+            Vector copy = new Vector(d_main.ToArray);
+            for (int i = 1; i < n; i++)
+            {
+                m = d_under[i] / d_main[i - 1];
+                d_main[i] = d_main[i] - m * d_upper[i - 1];
+                f[i] = f[i] - m * f[i - 1];
+            }
+
+            x[n - 1] = f[n - 1] / d_main[n - 1];
+
+            for (int i = n - 2; i >= 0; i--)
+                x[i] = (f[i] - d_upper[i] * x[i + 1]) / d_main[i];
+
+
+            return x;
+        }
+
+
+     
+
     }
 }

@@ -20,6 +20,20 @@ namespace MyMathLib.Spline
             return mas;
         }
 
+
+        public static double[] GetCardinalValue(int degree)
+        {
+            double[] mas = new double[degree - 1];
+            double h = 1;
+            for (int i = 0; i < degree - 1; i++)
+            {
+                mas[i] = CardinalSpline.Cardinal(degree, (i + 1) * h, 0, h);
+
+            }
+            return mas;
+        }
+
+
         public static Vector GetCoef_2h(int degree)
         {
             double[] ksi = GetCardinalValue(degree, 1d);
@@ -207,27 +221,113 @@ namespace MyMathLib.Spline
         {
             int N = f.Length;
             int p = degree;
-            double[] ksi = GetCardinalValue(degree, h);
+            double[] ksi = GetCardinalValue(degree - 1);
+            double[] mas = new double[ksi.Length + 1];
+
+            for (int i = 0; i < ksi.Length; i++)
+            {
+                mas[i] = ksi[i];
+            }
+            for (int i = 0; i < ksi.Length; i++)
+            {
+                mas[i + 1] = mas[i + 1] - ksi[i];
+            }
+
+            Console.WriteLine("ksi.len = " + ksi.Length);
             Vector I = new Vector(N + p - 2);
 
-            for (int i = 0; i < f.Length; i++)
-            {
-                for (int j = 0; j < ksi.Length; j++)
-                {
-                   // Console.WriteLine(" i - j = " + (i - j) + " ksi.Length - 1 - j = " + (ksi.Length - 1 - j));
-                    if (i - j >= 0)
-                    I[i] += 2.0*f[i - j] * ksi[ksi.Length - 1 - j]*h;
-                    
-                }
-                //Console.WriteLine("i = " + i + " INTEGR = " + I[i] );
 
+            if (degree == 2)
+            {
+                for (int i = 0; i < I.Length; i++)
+                {
+                    for (int j = 0; j < 1; j++)
+                    {
+
+                        // Console.WriteLine(" i - j = " + (i - j) + " ksi.Length - 1 - j = " + (ksi.Length - 1 - j));
+                        if (i - j >= 0 && i - j + 1 < f.Length)
+                        {
+                            I[i] += 2.0 * (f[i - j] - f[i - j + 1]) * h * h * h;
+
+                        }
+
+
+                    }
+
+
+                }
             }
+            else
+            {
+                for (int i = 0; i < I.Length; i++)
+                {
+                    for (int j = 0; j < mas.Length; j++)
+                    {
+                        if(i - j >= 0 && i - j < f.Length)
+                        I[i] += 2.0*f[i - j] * mas[j] * h * h * h;
+
+                    }
+
+
+                }
+            }
+
+            
+            //Console.WriteLine("skal = " + I);
             return I;
         }
 
+        public static Vector CalculateSkalExtendet(Vector f, int degree, double h)
+        {
+            int N = f.Length;
+            int p = degree;
+            double[] ksi = GetCardinalValue(degree - 1);
+            double[] mas = new double[ksi.Length + 1];
 
 
-        
+
+            for (int i = 0; i < ksi.Length; i++)
+            {
+                mas[i] = ksi[i];
+            }
+            for (int i = 0; i < ksi.Length; i++)
+            {
+                mas[i + 1] = mas[i + 1] - ksi[i];
+            }
+
+            Console.WriteLine("ksi = " + new Vector(mas));
+            Vector I = new Vector(N + p - 2);
+
+
+         
+                for (int i = 0; i < I.Length; i++)
+                {
+                    for (int j = 0; j < mas.Length; j++)
+                    {
+                        if (i - j >= 0 && i - j < f.Length)
+                            I[i] +=  f[i - j] * mas[j] ;
+
+                        if (i - j < 0)
+                        {
+                            I[i] +=  f[0] * mas[j] ;
+                        }
+
+                        if (i - j >= f.Length)
+                        {
+                            I[i] +=  f.Last * mas[j] ;
+                        }
+                    }
+
+
+                }
+
+
+
+            //Console.WriteLine("skal = " + I);
+            int s = degree - 1;
+            return (2.0) *I;
+        }
+
         public static Vector Interpolate_By_CardinalSpline(Vector y_knots, int degree, double h)
         {
             int N = y_knots.Length;

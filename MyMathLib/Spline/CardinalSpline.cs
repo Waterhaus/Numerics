@@ -8,6 +8,7 @@ namespace MyMathLib
 {
     public class CardinalSpline
     {
+        
 
         private static double ForwardDifferences(double[] div)
         {
@@ -51,6 +52,10 @@ namespace MyMathLib
             double p = (double)degree;
             //x out of supp
             if (x < 0 || x > p) return 0;
+            if (degree == 1)
+            {
+                return 1d;
+            }
             double t_i = Math.Floor(x);
             double[] y = new double[degree + 1];
 
@@ -190,6 +195,18 @@ namespace MyMathLib
             for (int i = 0; i < GridSize; i++)
             {
                 f[i] = CalculateCardinalSpline(a_border + i * h,c,t_0,step,degree);
+            }
+            return f;
+        }
+
+        public static Vector GetVectorFunctionCardinalSpline(int GridSize, double a_border, double b_border, double t_0, double step, int degree)
+        {
+            Vector f = new Vector(GridSize);
+            double h = MyMath.Basic.GetStep(GridSize, a_border, b_border);
+
+            for (int i = 0; i < GridSize; i++)
+            {
+                f[i] = Cardinal(degree, a_border + i * h, t_0, step);
             }
             return f;
         }

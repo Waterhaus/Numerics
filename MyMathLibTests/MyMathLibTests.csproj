@@ -63,6 +63,7 @@
     <Compile Include="MyMathBasicTests.cs" />
     <Compile Include="MyMathOperatorsTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SolverTestcs.cs" />
     <Compile Include="SplineDifferentiationTest.cs" />
     <Compile Include="VectorClassTest.cs" />
   </ItemGroup>
