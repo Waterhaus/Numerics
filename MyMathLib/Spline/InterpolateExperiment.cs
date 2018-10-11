@@ -225,6 +225,9 @@ namespace MyMathLib.Spline
             return I;
         }
 
+
+
+        
         public static Vector Interpolate_By_CardinalSpline(Vector y_knots, int degree, double h)
         {
             int N = y_knots.Length;
