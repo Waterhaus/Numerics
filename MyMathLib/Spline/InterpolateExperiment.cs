@@ -277,57 +277,6 @@ namespace MyMathLib.Spline
             return I;
         }
 
-        public static Vector CalculateSkalExtendet(Vector f, int degree, double h)
-        {
-            int N = f.Length;
-            int p = degree;
-            double[] ksi = GetCardinalValue(degree - 1);
-            double[] mas = new double[ksi.Length + 1];
-
-
-
-            for (int i = 0; i < ksi.Length; i++)
-            {
-                mas[i] = ksi[i];
-            }
-            for (int i = 0; i < ksi.Length; i++)
-            {
-                mas[i + 1] = mas[i + 1] - ksi[i];
-            }
-
-            Console.WriteLine("ksi = " + new Vector(mas));
-            Vector I = new Vector(N + p - 2);
-
-
-         
-                for (int i = 0; i < I.Length; i++)
-                {
-                    for (int j = 0; j < mas.Length; j++)
-                    {
-                        if (i - j >= 0 && i - j < f.Length)
-                            I[i] +=  f[i - j] * mas[j] ;
-
-                        if (i - j < 0)
-                        {
-                            I[i] +=  f[0] * mas[j] ;
-                        }
-
-                        if (i - j >= f.Length)
-                        {
-                            I[i] +=  f.Last * mas[j] ;
-                        }
-                    }
-
-
-                }
-
-
-
-            //Console.WriteLine("skal = " + I);
-            int s = degree - 1;
-            return (2.0) *I;
-        }
-
         public static Vector Interpolate_By_CardinalSpline(Vector y_knots, int degree, double h)
         {
             int N = y_knots.Length;
