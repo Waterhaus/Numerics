@@ -67,7 +67,7 @@ namespace MyMathLib.MultyGrid
             {
                 //MessageBox.Show("||r|| = " + r.Norm2SQ.ToString("0.0000000"));
                 z = BasicMGM(setup);
-                r = DifEquation.multiplyD2U(z) - setup.b;
+                r = DifferentialEquation.multiplyD2U(z) - setup.b;
 
                 Vector.copy(ref setup.z, z);
 
@@ -92,13 +92,13 @@ namespace MyMathLib.MultyGrid
                 //ню базовых итераций
                 for (int k = 0; k < setup.nu; k++)
                 {
-                    d_temp = DifEquation.multiplyD2U(z) - setup.b;
+                    d_temp = DifferentialEquation.multiplyD2U(z) - setup.b;
                     z = z - W * d_temp;
 
                 }
 
                 //коррекция
-                Vector d_2h = Proektor.basic_r(DifEquation.multiplyD2U(z) - setup.b);
+                Vector d_2h = Proektor.basic_r(DifferentialEquation.multiplyD2U(z) - setup.b);
                 Vector e_2h = new Vector(d_2h.Length);
                 //Решакем Ае = d
                 for (int i = 0; i < setup.gamma; i++)
@@ -114,7 +114,7 @@ namespace MyMathLib.MultyGrid
 
                 for (int k = 0; k < setup.nu; k++)
                 {
-                    d_temp = DifEquation.multiplyD2U(z) - setup.b;
+                    d_temp = DifferentialEquation.multiplyD2U(z) - setup.b;
                     z = z - W * d_temp;
                 }
                 return z;

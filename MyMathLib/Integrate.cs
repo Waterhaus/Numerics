@@ -45,6 +45,41 @@ namespace MyMathLib
                 return I;
             }
 
+
+        public static double TrapezoidMethod(Vector f, double h)
+        {
+            double S = 0;
+
+            for (int i = 1; i < f.Length - 1; i++)
+            {
+                S += f[i];
+            }
+            S += (f[0] + f.Last) / 2d;
+            S *= h;
+
+            return S;
+        }
+
+
+        public static double IntegrateSurface(Matrix F, double h_i, double h_j)
+        {
+            double S = 0;
+
+            Vector I = new Vector(F.Length.n);
+            int n = F.Length.m - 1;
+            for (int i = 0; i < F.Length.n; i++)
+            {
+                for (int j = 1; j < F.Length.m - 1; j++)
+                {
+                    I[i] += F[i, j];
+                }
+                I[i] += (F[i,0] + F[i,n]) / 2d;
+                I[i] *= h_j;
+            }
+
+            S = TrapezoidMethod(I, h_i);
+            return S;
+        }
             
 
 

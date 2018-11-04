@@ -168,11 +168,26 @@ namespace MyMathLib
                 // Console.Write(Cardinal(degree, x, a + (i - 1) * h, h).ToString("0.000") + " ");
                 //  Console.Write(GetCoef(i, c).ToString("0.000") + " ");
                 // Console.Write("; ");
-                S = S + c[i + p - 2] * Cardinal(degree, x, a + (i - 1 ) * h, h);
+                S = S + c[i + p] * Cardinal(degree, x, a + (i - 1 ) * h, h);
             }
             // Console.WriteLine("S = " + S + Environment.NewLine);
             return S;
         }
+
+        public static double CalculateSplineNormalWay(double x, Vector c, double a_start, double h, int degree)
+        {
+
+            int p = degree;
+            if (x < a_start) return 0d;
+            double S = 0d;
+
+            for (int i = 0; i < c.Length; i++)
+            {
+                S = S + c[i] * Cardinal(degree, x, a_start + i * h, h);
+            }
+            return S;
+        }
+
 
 
         public static Vector GetVectorFunctionSpline(int GridSize, double a_border, double b_border, Vector c, double t_0, double step, int degree)
@@ -186,7 +201,17 @@ namespace MyMathLib
             }
             return f;
         }
+        public static Vector GetVectorFunctionSplineNW(int GridSize, double a_border, double b_border, Vector c, double step, int degree)
+        {
+            Vector f = new Vector(GridSize);
+            double h = MyMath.Basic.GetStep(GridSize, a_border, b_border);
 
+            for (int i = 0; i < GridSize; i++)
+            {
+                f[i] = CalculateSplineNormalWay(a_border + i * h, c, a_border - (degree - 1)*step, step, degree);
+            }
+            return f;
+        }
         public static Vector GetVectorFunction(int GridSize, double a_border, double b_border, Vector c, double t_0, double step, int degree)
         {
             Vector f = new Vector(GridSize);

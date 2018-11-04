@@ -564,5 +564,46 @@ namespace MyMathLib.Spline
          
         }
 
+
+
+
+        public static Vector Cardinal_Interpolation_Complete_Test(FunctionLib.Function func, int degree, int Size, double a_border, double b_border)
+        {
+            //setup
+
+            double a = a_border;
+            double b = b_border;
+            int GridSize = Size;
+            int deg = degree;
+            Vector grid = Vector.CreateUniformGrid(GridSize, a, b);
+            double h = MyMath.Basic.GetStep(GridSize, a, b);
+            Vector y = MyMath.Basic.GetVectorFunction(GridSize, a, b, func);
+            Grid tau = new Grid(deg, grid, grid[0], grid.Last, true);
+            tau.ToPeriodiclineGrid();
+            //run
+
+
+            Vector min_c = Spline.InterpolateExperiment.Interpolate_By_CardinalSpline(y, deg, h);
+            // Console.WriteLine("c = " + c);
+            Console.WriteLine("min_c = " + min_c);
+            Console.WriteLine("Степень сплайна = " + deg);
+            //compare
+            int N = 10 * GridSize;
+            Vector expect = MyMath.Basic.GetVectorFunction(N - 1, a, b, func);
+            Vector actual = CardinalSpline.GetVectorFunctionSplineNW(N - 1, a, b, min_c, h, deg);
+            
+            Vector bf = CardinalSpline.GetVectorFunctionSplineNW(GridSize, a, b, min_c, h, deg);
+
+
+            double result = (expect - actual).Norm;
+            double interpolation = (y - bf).Norm;
+
+
+            Console.WriteLine("значение f(x) = " + y.ToString());
+            Console.WriteLine("значение bf(x) = " + bf.ToString());
+            Console.WriteLine("||c|| = " + min_c.Norm.ToString("0.000000"));
+            Console.WriteLine("||f - spline|| = " + result.ToString("0.000000"));
+            return min_c;
+        }
     }
 }
