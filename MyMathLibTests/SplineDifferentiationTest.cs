@@ -20,17 +20,17 @@ namespace MyMathLibTest
            
             double a = 0d;
             double b = Math.PI;
-            int GridSize = 40;
+            int GridSize = 20;
             int deg = 4;
             Vector grid = Vector.CreateUniformGrid(GridSize, a, b);
             double h = MyMath.Basic.GetStep(GridSize, a, b);
-            Vector y = MyMath.Basic.GetVectorFunction(GridSize, a, b, FunctionLib.line);
+            Vector y = MyMath.Basic.GetVectorFunction(GridSize, a, b, FunctionLib.constant_1);
 
-            Vector c = MyMathLib.Spline.SplineDifferentiation.SolveDifEquation(y,deg,h);
+            Vector c = MyMathLib.Spline.SplineDifferentiation.SolveDifEquation(y,1d,deg,h);
             //
 
             int N =  GridSize;
-            Vector expect = MyMath.Basic.GetVectorFunction(N - 1, a, b, FunctionLib.constant_1);
+            Vector expect = MyMath.Basic.GetVectorFunction(N - 1, a, b, FunctionLib.line);
             Vector actual = CardinalSpline.GetVectorFunctionSpline(N - 1, a, b, c, a, h, deg);
 
 

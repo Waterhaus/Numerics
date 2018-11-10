@@ -28,16 +28,24 @@ namespace MyMathLib.Spline
             return Ah;
         }
 
-        public static Vector SolveDifEquation(Vector y_knots, int degree, double h)
+        public static Vector SolveDifEquation(Vector y_knots,double y0, int degree, double h)
         {
             int N = y_knots.Length;
             int p = degree;
 
             Vector b = InterpolateExperiment.CalculateSkalExtendet(y_knots, degree, h);
 
-
-
+            b[0] = y0;
+                        
             Matrix Ah = Create_Ah(degree, N + p - 2);
+            double[] ksi = InterpolateExperiment.GetCardinalValue(degree);
+            for (int i = 0; i < ksi.Length; i++)
+            {
+
+                Ah[0, i + 1] = 0;
+                Ah[0, i] = ksi[i];
+            }
+
 
             if (N < 23)
             {
@@ -62,13 +70,13 @@ namespace MyMathLib.Spline
             int deg = degree;
             Vector grid = Vector.CreateUniformGrid(GridSize, a, b);
             double h = MyMath.Basic.GetStep(GridSize, a, b);
-            Vector y = MyMath.Basic.GetVectorFunction(GridSize, a, b, FunctionLib.line);
+            Vector y = MyMath.Basic.GetVectorFunction(GridSize, a, b, FunctionLib.constant_1);
 
-            Vector c = MyMathLib.Spline.SplineDifferentiation.SolveDifEquation(y, deg, h);
+            Vector c = MyMathLib.Spline.SplineDifferentiation.SolveDifEquation(y,0f, deg, h);
             //
             
             int N = GridSize;
-             expect = MyMath.Basic.GetVectorFunction(N - 1, a, b, FunctionLib.constant_1);
+             expect = MyMath.Basic.GetVectorFunction(N - 1, a, b, FunctionLib.line);
              actual = CardinalSpline.GetVectorFunctionSpline(N - 1, a, b, c, a, h, deg);
             x = Vector.CreateUniformGrid(N - 1, a, b);
 
@@ -82,7 +90,7 @@ namespace MyMathLib.Spline
         }
 
         public static void Solve_Test(ref Vector x, ref Vector expect, ref Vector actual,
-                                        FunctionLib.Function G, FunctionLib.Function dG, 
+                                        FunctionLib.Function dG, FunctionLib.Function G, 
                                         int Size, int degree,double a_border, double b_border)
         {
 
@@ -92,13 +100,13 @@ namespace MyMathLib.Spline
             int deg = degree;
             Vector grid = Vector.CreateUniformGrid(GridSize, a, b);
             double h = MyMath.Basic.GetStep(GridSize, a, b);
-            Vector y = MyMath.Basic.GetVectorFunction(GridSize, a, b, G);
+            Vector y = MyMath.Basic.GetVectorFunction(GridSize, a, b, dG);
 
-            Vector c = MyMathLib.Spline.SplineDifferentiation.SolveDifEquation(y, deg, h);
+            Vector c = MyMathLib.Spline.SplineDifferentiation.SolveDifEquation(y,G(a_border), deg, h);
             //
             Console.WriteLine("step = " + h);
             int N = GridSize;
-            expect = MyMath.Basic.GetVectorFunction(N - 1, a, b, dG);
+            expect = MyMath.Basic.GetVectorFunction(N - 1, a, b, G);
             actual = CardinalSpline.GetVectorFunctionSpline(N - 1, a, b, c, a, h, deg);
             x = Vector.CreateUniformGrid(N - 1, a, b);
 
