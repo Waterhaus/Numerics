@@ -9,7 +9,7 @@ namespace MyMathLib
     public class FunctionLib
     {
         public delegate double Function(double t);
-        public delegate double Function2d(double t, double s);
+        public delegate double Function2d(double x, double t);
         public delegate object UniFunction(object t);
         public delegate double MyFunctionDoubleDelegate(params object[] args);
 
@@ -18,6 +18,10 @@ namespace MyMathLib
             return Math.Exp(t);
         }
 
+        public static double five_x_square(double t)
+        {
+            return 5 * t * t;
+        }
         public static double polinom_deg3_1(double t)
         {
             return t * (t - 4d) * (t - 4d);
@@ -46,6 +50,14 @@ namespace MyMathLib
             return t;
 
         }
+
+        public static double zero(double t)
+        {
+            return 0;
+
+        }
+
+
 
         public static double sin(double t)
         {

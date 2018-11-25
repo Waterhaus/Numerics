@@ -277,57 +277,6 @@ namespace MyMathLib.Spline
             return I;
         }
 
-        public static Vector CalculateSkalExtendet(Vector f, int degree, double h)
-        {
-            int N = f.Length;
-            int p = degree;
-            double[] ksi = GetCardinalValue(degree - 1);
-            double[] mas = new double[ksi.Length + 1];
-
-
-
-            for (int i = 0; i < ksi.Length; i++)
-            {
-                mas[i] = ksi[i];
-            }
-            for (int i = 0; i < ksi.Length; i++)
-            {
-                mas[i + 1] = mas[i + 1] - ksi[i];
-            }
-
-            Console.WriteLine("ksi = " + new Vector(mas));
-            Vector I = new Vector(N + p - 2);
-
-
-         
-                for (int i = 0; i < I.Length; i++)
-                {
-                    for (int j = 0; j < mas.Length; j++)
-                    {
-                        if (i - j >= 0 && i - j < f.Length)
-                            I[i] +=  f[i - j] * mas[j] ;
-
-                        if (i - j < 0)
-                        {
-                            I[i] +=  f[0] * mas[j] ;
-                        }
-
-                        if (i - j >= f.Length)
-                        {
-                            I[i] +=  f.Last * mas[j] ;
-                        }
-                    }
-
-
-                }
-
-
-
-            //Console.WriteLine("skal = " + I);
-            int s = degree - 1;
-            return (2.0) *I;
-        }
-
         public static Vector Interpolate_By_CardinalSpline(Vector y_knots, int degree, double h)
         {
             int N = y_knots.Length;
@@ -615,5 +564,46 @@ namespace MyMathLib.Spline
          
         }
 
+
+
+
+        public static Vector Cardinal_Interpolation_Complete_Test(FunctionLib.Function func, int degree, int Size, double a_border, double b_border)
+        {
+            //setup
+
+            double a = a_border;
+            double b = b_border;
+            int GridSize = Size;
+            int deg = degree;
+            Vector grid = Vector.CreateUniformGrid(GridSize, a, b);
+            double h = MyMath.Basic.GetStep(GridSize, a, b);
+            Vector y = MyMath.Basic.GetVectorFunction(GridSize, a, b, func);
+            Grid tau = new Grid(deg, grid, grid[0], grid.Last, true);
+            tau.ToPeriodiclineGrid();
+            //run
+
+
+            Vector min_c = Spline.InterpolateExperiment.Interpolate_By_CardinalSpline(y, deg, h);
+            // Console.WriteLine("c = " + c);
+            Console.WriteLine("min_c = " + min_c);
+            Console.WriteLine("Степень сплайна = " + deg);
+            //compare
+            int N = 10 * GridSize;
+            Vector expect = MyMath.Basic.GetVectorFunction(N - 1, a, b, func);
+            Vector actual = CardinalSpline.GetVectorFunctionSplineNW(N - 1, a, b, min_c, h, deg);
+            
+            Vector bf = CardinalSpline.GetVectorFunctionSplineNW(GridSize, a, b, min_c, h, deg);
+
+
+            double result = (expect - actual).Norm;
+            double interpolation = (y - bf).Norm;
+
+
+            Console.WriteLine("значение f(x) = " + y.ToString());
+            Console.WriteLine("значение bf(x) = " + bf.ToString());
+            Console.WriteLine("||c|| = " + min_c.Norm.ToString("0.000000"));
+            Console.WriteLine("||f - spline|| = " + result.ToString("0.000000"));
+            return min_c;
+        }
     }
 }

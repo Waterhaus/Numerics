@@ -45,6 +45,35 @@ namespace MyMathLib
 
         }
 
+        public double MaxValue
+        {
+            get
+            {
+                double max = v[0];
+                for (int i = 0; i < length; i++)
+                {
+                    double temp = v[i];
+                    if (temp > max) max = temp;
+                }
+
+                return max;
+            }
+        }
+
+        public double MinValue
+        {
+            get
+            {
+                double min = v[0];
+                for (int i = 0; i < length; i++)
+                {
+                    double temp = v[i];
+                    if (temp < min) min = temp;
+                }
+
+                return min;
+            }
+        }
 
         public Vector()
         {
@@ -243,6 +272,18 @@ namespace MyMathLib
         public static Vector CreateUniformGrid(int GridSize, double a, double b)
         {
             return new Vector(MyMath.Basic.CreateUniformGrid(GridSize, a, b));
+        }
+
+        public Vector GetPartVector(int start, int end)
+        {
+            int N = end - start + 1;
+            Vector vec = new Vector(N);
+            for (int i = 0  ; i < N && i < length; i++)
+            {
+                vec[i] = v[i + start];
+            }
+
+            return vec;
         }
     }
 
