@@ -64,6 +64,7 @@
     <Compile Include="MyMathOperatorsTest.cs" />
     <Compile Include="OptimalManagingTest\OptimalManagingTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QuickUnitTest.cs" />
     <Compile Include="SolverTestcs.cs" />
     <Compile Include="SplineDifferentiationTest.cs" />
     <Compile Include="VectorClassTest.cs" />

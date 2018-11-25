@@ -53,6 +53,7 @@ namespace MyMathLib.Spline
 
             return Ah;
         }
+        /*
 
         public static Vector SolveDifEquation(Vector y_knots, int degree, double h)
         {
@@ -227,6 +228,6 @@ namespace MyMathLib.Spline
             Console.WriteLine("||f - spline|| = " + result.ToString("0.000"));
             Console.WriteLine("max|f - spline| = " + max.ToString("0.000"));
 
-        }
+        }*/
     }
 }
