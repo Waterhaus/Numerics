@@ -53,14 +53,16 @@ namespace MyMathLib.Spline
             return D;
         }
 
-        public static Matrix FirstDirevetive1(int N)
+
+        public static Matrix SecondDirevetive(int N)
         {
-            Matrix D = new Matrix(N, N);
+            Matrix D = new Matrix(N + 2, N);
 
             for (int i = 0; i < N; i++)
             {
                 D[i, i] = -1;
-                if(i + 1 < N) D[i + 1, i] = 1;
+                D[i + 1, i] = 2;
+                D[i + 2, i] = -1;
             }
 
             return D;

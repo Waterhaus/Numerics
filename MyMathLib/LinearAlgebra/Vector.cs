@@ -212,6 +212,16 @@ namespace MyMathLib
         }
 
 
+        public Vector SubVector(int start, int size)
+        {
+            Vector vec = new Vector(size);
+            for (int i = start; i < start + size; i++)
+            {
+                vec[i - start] = v[i];
+            }
+            return vec;
+        }
+
         public static void copy(ref Vector x, Vector y)
         {
             x = new Vector(y.Length);
