@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="MyColor.cs" />
     <Compile Include="Spline\CardinalDifferentialEquation.cs" />
+    <Compile Include="Spline\CardinalFiniteMethod\CardinalSolver.cs" />
     <Compile Include="Spline\CardinalInterpolation.cs" />
     <Compile Include="Spline\CardinalSpline.cs" />
     <Compile Include="Spline\BasisSpline.cs" />

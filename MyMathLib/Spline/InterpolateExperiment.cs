@@ -49,17 +49,17 @@ namespace MyMathLib.Spline
             {
                 for (int j = 0; j < ksi.Length; j++)
                 {
-                    if(i - j >= 0 )
-                    A[i, i - j] = ksi[ksi.Length - 1 - j];
+                    if (i - j >= 0)
+                        A[i, i - j] = ksi[ksi.Length - 1 - j];
                 }
             }
             Matrix A_t = Matrix.transpose(A);
             Console.WriteLine("y = " + y);
             Console.WriteLine("A_T*A = " + A);
-            
+
             Vector c = new Vector();
-            c = Solver.BCGSTAB(A,  y, 0.0000001d);
-            Console.WriteLine( "SUM c  = " + MyMath.Basic.SumArray(c.ToArray) ); 
+            c = Solver.BCGSTAB(A, y, 0.0000001d);
+            Console.WriteLine("SUM c  = " + MyMath.Basic.SumArray(c.ToArray));
             return c;
         }
 
@@ -67,7 +67,7 @@ namespace MyMathLib.Spline
         {
             int degree = ksi.Length + 1;
             Matrix A = new Matrix(size);
-            
+
 
             int N = size - 1;
             int p = degree - 1;
@@ -120,8 +120,8 @@ namespace MyMathLib.Spline
             int N = size;
             int p = degree;
             double[] ksi = GetCardinalValue(degree, h);
-            
-            
+
+
             Vector y = new Vector(N);
             for (int i = 0; i < N; i++)
             {
@@ -135,7 +135,7 @@ namespace MyMathLib.Spline
 
         }
 
-        public static Matrix CreateKSIMatrix(int degree,double h, int size)
+        public static Matrix CreateKSIMatrix(int degree, double h, int size)
         {
             int N = size;
             int p = degree;
@@ -143,13 +143,13 @@ namespace MyMathLib.Spline
             Console.WriteLine("deg = " + 2 * degree + " ksi = " + new Vector(ksi).ToString("0.000000"));
             ksi[degree - 1] = 2 * ksi[degree - 1];
             Matrix A = new Matrix(N + p - 2, N + p - 2);
-           
+
             for (int i = 0; i < N + p - 2; i++)
             {
                 for (int j = 0; j < ksi.Length; j++)
                 {
-                    if(i + j - p + 1 >= 0 && i + j - p + 1 < N + p - 2)
-                    A[i, i + j - p + 1] = ksi[j];
+                    if (i + j - p + 1 >= 0 && i + j - p + 1 < N + p - 2)
+                        A[i, i + j - p + 1] = ksi[j];
                 }
             }
             return A;
@@ -158,14 +158,14 @@ namespace MyMathLib.Spline
 
 
 
-        public static Vector MultiplyKSIMatrix(Vector x,int degree, double h, int size)
+        public static Vector MultiplyKSIMatrix(Vector x, int degree, double h, int size)
         {
             int N = size;
             int p = degree;
             double[] ksi = GetCardinalValue(2 * degree, h);
             Console.WriteLine("deg = " + 2 * degree + " ksi = " + new Vector(ksi).ToString("0.000000"));
             ksi[degree - 1] = 2 * ksi[degree - 1];
-           
+
             Vector y = new Vector(N + p - 2);
 
             for (int i = 0; i < N + p - 2; i++)
@@ -196,7 +196,7 @@ namespace MyMathLib.Spline
 
             Matrix S = new Matrix(2 * N + p - 2);
 
-            for (int i = 0; i < N ; i++)
+            for (int i = 0; i < N; i++)
             {
                 for (int j = 0; j < N + p - 2; j++)
                 {
@@ -209,7 +209,7 @@ namespace MyMathLib.Spline
             {
                 for (int j = 0; j < N + p - 2; j++)
                 {
-                    S[N + i, j] = h*KSI[i, j];
+                    S[N + i, j] = h * KSI[i, j];
                 }
             }
 
@@ -263,8 +263,8 @@ namespace MyMathLib.Spline
                 {
                     for (int j = 0; j < mas.Length; j++)
                     {
-                        if(i - j >= 0 && i - j < f.Length)
-                        I[i] += 2.0*f[i - j] * mas[j] * h * h * h;
+                        if (i - j >= 0 && i - j < f.Length)
+                            I[i] += 2.0 * f[i - j] * mas[j] * h * h * h;
 
                     }
 
@@ -272,7 +272,7 @@ namespace MyMathLib.Spline
                 }
             }
 
-            
+
             //Console.WriteLine("skal = " + I);
             return I;
         }
@@ -281,24 +281,24 @@ namespace MyMathLib.Spline
         {
             int N = y_knots.Length;
             int p = degree;
-            Vector b = new Vector(2 *N + p - 2);
+            Vector b = new Vector(2 * N + p - 2);
             for (int i = 0; i < N; i++)
             {
                 b[i] = y_knots[i];
             }
             Vector I = CalculateSkal(y_knots, degree, h);
-    
+
             for (int i = N; i < b.Length; i++)
             {
-                
-                    b[i] = I[i - N];
-                
+
+                b[i] = I[i - N];
+
             }
 
             Matrix A = Create_LagrangeInterpolationMatrix(degree, h, N);
-           // 
+            // 
             double EPS = 0.0000001d;
-            Vector coefs = Solver.BCGSTAB((Matrix.transpose(A))*A, (Matrix.transpose(A)) * b, EPS);
+            Vector coefs = Solver.BCGSTAB((Matrix.transpose(A)) * A, (Matrix.transpose(A)) * b, EPS);
 
             //Console.WriteLine("b = " + b);
             //Console.WriteLine("A*c - b" + (A*coefs- b));
@@ -314,14 +314,14 @@ namespace MyMathLib.Spline
 
 
 
-        public static Vector Multiply_LagrangeInterpolationMatrix(Vector x,int degree, double h, int size)
+        public static Vector Multiply_LagrangeInterpolationMatrix(Vector x, int degree, double h, int size)
         {
             int N = size;
             int p = degree;
             double[] ksi = GetCardinalValue(degree, h);
 
 
-            Vector y = new Vector(2*N + p - 2);
+            Vector y = new Vector(2 * N + p - 2);
 
             for (int i = 0; i < N; i++)
             {
@@ -330,16 +330,16 @@ namespace MyMathLib.Spline
                     //A[i, i + j] = ksi[j];
                     y[i] = y[i] + x[i + j] * ksi[j];
 
-                    y[N + i + j] = y[N + i + j] + x[N + p - 2 + i] *(-ksi[j]);
+                    y[N + i + j] = y[N + i + j] + x[N + p - 2 + i] * (-ksi[j]);
                 }
             }
 
             //---------------
             double[] ksi_2p = GetCardinalValue(2 * degree, h);
-           // Console.WriteLine("deg = " + 2 * degree + " ksi = " + new Vector(ksi).ToString("0.000000"));
+            // Console.WriteLine("deg = " + 2 * degree + " ksi = " + new Vector(ksi).ToString("0.000000"));
             ksi_2p[degree - 1] = 2 * ksi_2p[degree - 1];
 
-          
+
 
             for (int i = 0; i < N + p - 2; i++)
             {
@@ -348,7 +348,7 @@ namespace MyMathLib.Spline
                     if (i + j - p + 1 >= 0 && i + j - p + 1 < N + p - 2)
                     {
                         //A[i, i + j - p + 1] = ksi[j];
-                        y[N + i] = y[N + i] + ksi_2p[j] * x[i + j - p + 1] ;
+                        y[N + i] = y[N + i] + ksi_2p[j] * x[i + j - p + 1];
 
 
                     }
@@ -401,8 +401,8 @@ namespace MyMathLib.Spline
 
         public static Vector Interpolate(Vector y_knots, int degree, double h)
         {
-            
-            Vector b = new Vector(2*y_knots.Length);
+
+            Vector b = new Vector(2 * y_knots.Length);
             for (int i = 0; i < y_knots.Length; i++)
             {
                 b[i] = y_knots[i];
@@ -418,7 +418,7 @@ namespace MyMathLib.Spline
 
 
 
-        public static Vector InterpolateWith_BCGSTAB( Vector b, int degree, double h, int size, double EPS)
+        public static Vector InterpolateWith_BCGSTAB(Vector b, int degree, double h, int size, double EPS)
         {
             Vector r = new Vector(b.Length);
             Vector rr = new Vector(b.Length);
@@ -508,11 +508,11 @@ namespace MyMathLib.Spline
             {
                 b[i] = y_knots[i];
             }
-            
+
             double EPS = 0.000000001d;
             Vector coefs = InterpolateWith_BCGSTAB(b, degree, h, N, EPS);
             Console.WriteLine("b = " + b);
-            Console.WriteLine("A*c - b" + (Multiply_LagrangeInterpolationMatrix( coefs,degree,h,N) - b));
+            Console.WriteLine("A*c - b" + (Multiply_LagrangeInterpolationMatrix(coefs, degree, h, N) - b));
 
             Vector c = new Vector(N + p - 2);
             for (int i = 0; i < c.Length; i++)
@@ -525,10 +525,10 @@ namespace MyMathLib.Spline
 
 
 
-        public static void MIN_Interpolation_Test(FunctionLib.Function func, ref Vector x ,ref Vector expect, ref Vector actual, int degree, int Size, double a_border, double b_border)
+        public static void MIN_Interpolation_Test(FunctionLib.Function func, ref Vector x, ref Vector expect, ref Vector actual, int degree, int Size, double a_border, double b_border)
         {
             //setup
-            
+
             double a = a_border;
             double b = b_border;
             int GridSize = Size;
@@ -539,7 +539,7 @@ namespace MyMathLib.Spline
             Grid tau = new Grid(deg, grid, grid[0], grid.Last, true);
             tau.ToPeriodiclineGrid();
             //run
-  
+
 
             Vector min_c = Spline.InterpolateExperiment.Interpolate_By_CardinalSpline(y, deg, h);
             // Console.WriteLine("c = " + c);
@@ -548,9 +548,10 @@ namespace MyMathLib.Spline
             //compare
             int N = 10 * GridSize;
             expect = MyMath.Basic.GetVectorFunction(N - 1, a, b, func);
-            actual = CardinalSpline.GetVectorFunctionSpline(N - 1, a, b, min_c, a, h, deg);
+            CardinalSpline spline = new CardinalSpline();
+            actual = spline.GetVectorFunction(N - 1, a, b, min_c, h, deg);
             x = Vector.CreateUniformGrid(N - 1, a, b);
-            Vector bf = CardinalSpline.GetVectorFunctionSpline(GridSize, a, b, min_c, a, h, deg);
+            Vector bf = spline.GetVectorFunction(GridSize, a, b, min_c, h, deg);
 
 
             double result = (expect - actual).Norm;
@@ -561,7 +562,7 @@ namespace MyMathLib.Spline
             Console.WriteLine("значение bf(x) = " + bf.ToString());
             Console.WriteLine("||c|| = " + min_c.Norm.ToString("0.000000"));
             Console.WriteLine("||f - spline|| = " + result.ToString("0.000000"));
-         
+
         }
 
 
@@ -590,9 +591,10 @@ namespace MyMathLib.Spline
             //compare
             int N = 10 * GridSize;
             Vector expect = MyMath.Basic.GetVectorFunction(N - 1, a, b, func);
-            Vector actual = CardinalSpline.GetVectorFunctionSplineNW(N - 1, a, b, min_c, h, deg);
-            
-            Vector bf = CardinalSpline.GetVectorFunctionSplineNW(GridSize, a, b, min_c, h, deg);
+            CardinalSpline spline = new CardinalSpline();
+            Vector actual = spline.GetVectorFunction(N - 1, a, b, min_c, h, deg);
+
+            Vector bf = spline.GetVectorFunction(GridSize, a, b, min_c, h, deg);
 
 
             double result = (expect - actual).Norm;

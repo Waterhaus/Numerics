@@ -6,11 +6,17 @@ using System.Threading.Tasks;
 
 namespace MyMathLib
 {
-    public class CardinalSpline
-    {
-        
 
-        private static double ForwardDifferences(double[] div)
+
+    public interface ICardinalStratagy
+    {
+        double Cardinal(int degree, double x, double t_i, double h);
+    }
+
+    //Алгоритм подсчета базисных сплайнов через разделенные разности
+    public class DividedDifferencesStategy : ICardinalStratagy
+    {
+        private double ForwardDifferences(double[] div)
         {
 
 
@@ -25,7 +31,8 @@ namespace MyMathLib
             return div[0];
 
         }
-        private static double DividedDifferences(double[] v)
+
+        private double DividedDifferences(double[] v)
         {
             int k = v.Length - 2;
             double temp = (double)MyMathLib.MyMath.Basic.Factorial(k);
@@ -34,20 +41,20 @@ namespace MyMathLib
 
         }
 
-        private static double positive(double x)
+        private double positive(double x)
         {
             if (x > 0) return x;
             else return 0;
         }
 
-        private static double pol(double x, double t,int n)
+        private double pol(double x, double t, int n)
         {
             double f = Math.Pow(positive(t - x), n - 1);
 
             return (f);
         }
 
-        public static double BasisCardinal(int degree, double x)
+        private double BasisCardinal(int degree, double x)
         {
             double p = (double)degree;
             //x out of supp
@@ -66,115 +73,43 @@ namespace MyMathLib
 
             double div_y = DividedDifferences(y);
 
-            return div_y; 
-            
+            return div_y;
 
+
+        }
+
+        public double Cardinal(int degree, double x, double t_i, double h)
+        {
+            return BasisCardinal(degree, (x - t_i) / h);
+        }
+    }
+
+    public class CardinalSpline
+    {
+        private ICardinalStratagy calculate;
+        private static ICardinalStratagy static_calculate;
+
+        static CardinalSpline()
+        {
+            static_calculate = new DividedDifferencesStategy();
+        }
+        public CardinalSpline()
+        {
+            calculate = new DividedDifferencesStategy();
+        }
+
+        public CardinalSpline(ICardinalStratagy strategy)
+        {
+            this.calculate = strategy;
         }
 
         public static double Cardinal(int degree, double x, double t_i, double h)
         {
-            return BasisCardinal(degree, (x - t_i) / h);
+            return static_calculate.Cardinal(degree, x, t_i, h);
         }
 
-        public static Matrix CreateInterpolationMatrix(Grid tau,double h, int degree)
-        {
-            Matrix A = new Matrix(tau.OriginalCount);
-
-            double[] mas = new double[degree - 1];
-            for (int i = 0; i < degree - 1; i++)
-            {
-                mas[i] = Cardinal(degree, (i+1)*h, 0, h);
-               
-            }
-
-            int N = tau.OriginalCount - 1;
-            int p = degree - 1;
-            for (int i = 0; i < tau.OriginalCount; i++)
-            {
-                for (int j = 0; j < tau.OriginalCount; j++)
-                {
-                    if(!(j > N - p + 1 && i > N - p + 1))
-                    A[i, j] = Cardinal(degree,tau.GetOrigin(j)+(degree - 1)*h, tau.GetOrigin(i),h);
-                }
-            }
-
-            N = A.Length.n;
-            for (int j = 1; j < mas.Length; j++)
-            {
-                for (int i = 0; i + j < mas.Length; i++)
-                {
-                    A[j - 1, N - degree + 1 + i + j] = mas[i];
-                    A[N - degree + 1 + i + j, j - 1] = mas[i];
-                }
-            }
-            
-            return A;
-        }
-
-
-        public static Vector Interpolate(Vector y_knots, Grid grid, int degree, double h)
-        {
-            if (degree == 2) return y_knots;
-           
-            Matrix A = CreateInterpolationMatrix(grid, h, degree);
-           // Console.WriteLine(A);
-            double EPS = 0.000001d;
-            Vector coefs = Solver.BCGSTAB(A, y_knots, EPS);
-
-            return coefs;
-        }
-
-
-        public static double GetCoef(int index, Vector c)
-        {
-            if (index < 0) return c[c.Length + index];
-            return c[index];
-        }
-
-        public static double GetCoef(int index,int degree, Vector c)
-        {
-            int p = degree - 2;
-            if (index < 0) return c[c.Length + index];
-            if (index >= c.Length - p) return c[index - c.Length + p];
-            return c[index];
-        }
-        public static double CalculateCardinalSpline(double x, Vector c, double a, double h, int degree)
-        {
-            if (x < a) return 0d;
-            int index = (int)Math.Floor((x - a + h/100d) / h) + 1;
-            double S = 0d;
-
-            for (int i = index - degree + 1; i <= index; i++)
-            {
-               // Console.Write(Cardinal(degree, x, a + (i - 1) * h, h).ToString("0.000") + " ");
-              //  Console.Write(GetCoef(i, c).ToString("0.000") + " ");
-               // Console.Write("; ");
-                S = S + GetCoef(i, degree,c) * Cardinal(degree, x, a + (i - 1) * h, h);
-            }
-           // Console.WriteLine("S = " + S + Environment.NewLine);
-            return S;
-        }
-
-        public static double CalculateSpline(double x, Vector c, double a, double h, int degree)
-        {
-
-            int p = degree;
-            if (x < a) return 0d;
-            int index = (int)Math.Floor((x - a + h / 100d) / h);
-            double S = 0d;
-
-            for (int i = index - p + 2; i < c.Length - p + 2 && i < index + 2; i++)
-            {
-                // Console.Write(Cardinal(degree, x, a + (i - 1) * h, h).ToString("0.000") + " ");
-                //  Console.Write(GetCoef(i, c).ToString("0.000") + " ");
-                // Console.Write("; ");
-                S = S + c[i + p] * Cardinal(degree, x, a + (i - 1 ) * h, h);
-            }
-            // Console.WriteLine("S = " + S + Environment.NewLine);
-            return S;
-        }
-
-        public static double CalculateSplineNormalWay(double x, Vector c, double a_start, double h, int degree)
+        //Функция считает значение сплайна в одной точке
+        public double CalculateSpline(double x, Vector c, double a_start, double h, int degree)
         {
 
             int p = degree;
@@ -183,58 +118,31 @@ namespace MyMathLib
 
             for (int i = 0; i < c.Length; i++)
             {
-                S = S + c[i] * Cardinal(degree, x, a_start + i * h, h);
+                S = S + c[i] * calculate.Cardinal(degree, x, a_start + i * h, h);
             }
             return S;
         }
 
 
-
-        public static Vector GetVectorFunctionSpline(int GridSize, double a_border, double b_border, Vector c, double t_0, double step, int degree)
+        //Функция возвращает массив точек(значений функции) на отрезке [a b]
+        public Vector GetVectorFunction(int GridSize, double a_border, double b_border, Vector c, double step, int degree)
         {
             Vector f = new Vector(GridSize);
             double h = MyMath.Basic.GetStep(GridSize, a_border, b_border);
 
             for (int i = 0; i < GridSize; i++)
             {
-                f[i] = CalculateSpline(a_border + i * h, c, t_0, step, degree);
-            }
-            return f;
-        }
-        public static Vector GetVectorFunctionSplineNW(int GridSize, double a_border, double b_border, Vector c, double step, int degree)
-        {
-            Vector f = new Vector(GridSize);
-            double h = MyMath.Basic.GetStep(GridSize, a_border, b_border);
-
-            for (int i = 0; i < GridSize; i++)
-            {
-                f[i] = CalculateSplineNormalWay(a_border + i * h, c, a_border - (degree - 1)*step, step, degree);
-            }
-            return f;
-        }
-        public static Vector GetVectorFunction(int GridSize, double a_border, double b_border, Vector c, double t_0, double step, int degree)
-        {
-            Vector f = new Vector(GridSize);
-            double h = MyMath.Basic.GetStep(GridSize, a_border, b_border);
-
-            for (int i = 0; i < GridSize; i++)
-            {
-                f[i] = CalculateCardinalSpline(a_border + i * h,c,t_0,step,degree);
+                f[i] = CalculateSpline(a_border + i * h, c, a_border, step, degree);
             }
             return f;
         }
 
-        public static Vector GetVectorFunctionCardinalSpline(int GridSize, double a_border, double b_border, double t_0, double step, int degree)
-        {
-            Vector f = new Vector(GridSize);
-            double h = MyMath.Basic.GetStep(GridSize, a_border, b_border);
 
-            for (int i = 0; i < GridSize; i++)
-            {
-                f[i] = Cardinal(degree, a_border + i * h, t_0, step);
-            }
-            return f;
-        }
+
+
+
+
+
 
     }
 }
