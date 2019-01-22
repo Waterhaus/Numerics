@@ -16,6 +16,37 @@ namespace MyMathLib
                 return 1;
             }
 
+            public static int BinomialCoeff(int n, int k)
+            {
+
+                // Base Cases 
+                if (k == 0 || k == n)
+                    return 1;
+
+                // Recur 
+                return BinomialCoeff(n - 1, k - 1) + BinomialCoeff(n - 1, k);
+            }
+
+            public static double[] PascalNumbers(uint level)
+            {
+                double[] num = new double[level + 1];
+                for (int i = 0; i < level + 1; i++)
+                {
+                    num[i] = BinomialCoeff((int)level, i);
+                }
+                return num;
+            }
+
+            public static double[] NegativePascalNumbers(uint level)
+            {
+                double[] num = new double[level + 1];
+                for (int i = 0; i < level + 1; i++)
+                {
+                    num[i] = Math.Pow(-1d,i)*BinomialCoeff((int)level, i);
+                }
+                return num;
+            }
+
             public static double SumArray(double[] arr)
             {
                 double S = 0;

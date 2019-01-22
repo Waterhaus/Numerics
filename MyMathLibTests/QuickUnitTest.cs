@@ -14,7 +14,7 @@ namespace MyMathLibTests
         {
             Matrix D = CardinalDifferentialEquation.FirstDirevetive(3);
             Matrix KSI = CardinalDifferentialEquation.CreateKSIMatrix(2, 1, 4);
-            Matrix DD = D * Matrix.transpose(D);
+            Matrix DD = D * Matrix.Transpose(D);
             Console.WriteLine(D);
             Console.WriteLine(DD);
            // DD[0, 0] = 2d;
@@ -50,7 +50,7 @@ namespace MyMathLibTests
             double u0 = 1;
             Matrix D = CardinalDifferentialEquation.FirstDirevetive(N);
             Matrix KSI = CardinalDifferentialEquation.CreateKSIMatrix(degree, h, N + 1);
-            Matrix DD = D * Matrix.transpose(D);
+            Matrix DD = D * Matrix.Transpose(D);
             //KSI[0, 0] -= KSI[0, 1];
             //KSI[N, N] -= KSI[0, 1];
             //DD[0, 0] = DD[N, N] = 2d;
@@ -123,7 +123,7 @@ namespace MyMathLibTests
             double u0 = 1;
             Matrix D = CardinalDifferentialEquation.FirstDirevetive(N);
             Matrix KSI = CardinalDifferentialEquation.CreateKSIMatrix(degree, h, N + 1);
-            Matrix DD = D * Matrix.transpose(D);
+            Matrix DD = D * Matrix.Transpose(D);
             //KSI[0, 0] -= KSI[0, 1];
             //KSI[N, N] -= KSI[0, 1];
             //DD[0, 0] = DD[N, N] = 2d;
@@ -197,7 +197,7 @@ namespace MyMathLibTests
             Vector f = MyMath.Basic.GetVectorFunction(N, a_border, b_border, FunctionLib.cos);
             Matrix D = CardinalDifferentialEquation.FirstDirevetive(N);
             //Matrix KSI = CardinalDifferentialEquation.CreateKSIMatrix(degree, h, N + 1);
-            Matrix DD = D * Matrix.transpose(D);
+            Matrix DD = D * Matrix.Transpose(D);
             //KSI[0, 0] -= KSI[0, 1];
             //KSI[N, N] -= KSI[0, 1];
             //DD[0, 0] = DD[N, N] = 2d;
@@ -238,8 +238,8 @@ namespace MyMathLibTests
             Console.WriteLine("Ax = " + B * c);
 
             Vector d = c.SubVector(0,N+1);
-
-            Vector anser = CardinalSpline.GetVectorFunctionSplineNW(100, a_border, b_border, d, h, degree + 1);
+            CardinalSpline spline = new CardinalSpline();
+            Vector anser = spline.GetVectorFunction(100, a_border, b_border, d, h, degree + 1);
             Vector expect = MyMath.Basic.GetVectorFunction(100, a_border, b_border, FunctionLib.sin);
 
             Console.WriteLine("||u - u_spl|| = " + (expect - anser).Norm);
@@ -258,7 +258,7 @@ namespace MyMathLibTests
 
             Vector f = MyMath.Basic.GetVectorFunction(N, a_border, b_border, FunctionLib.cos);
             Matrix D = CardinalDifferentialEquation.SecondDirevetive(N);
-            Matrix DD = D * Matrix.transpose(D);
+            Matrix DD = D * Matrix.Transpose(D);
          //   Console.WriteLine(DD);
             Matrix A = (1d / (h*h)) * DD;
             
@@ -298,7 +298,9 @@ namespace MyMathLibTests
 
             Vector d = c.SubVector(0, N + 2);
 
-            Vector anser = CardinalSpline.GetVectorFunctionSplineNW(10, a_border, b_border, d, h, degree + 2);
+            CardinalSpline spline = new CardinalSpline();
+
+            Vector anser = spline.GetVectorFunction(10, a_border, b_border, d, h, degree + 2);
             Vector expect = MyMath.Basic.GetVectorFunction(10, a_border, b_border, FunctionLib.cos);
             Console.WriteLine(anser); Console.WriteLine(    expect);
 

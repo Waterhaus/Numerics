@@ -146,7 +146,7 @@ namespace MyMathLib.Spline
             Matrix A = Create_LagrangeInterpolationMatrix(degree, h, N);
             // 
             double EPS = 0.0000001d;
-            Vector coefs = Solver.BCGSTAB((Matrix.transpose(A)) * A, (Matrix.transpose(A)) * b, EPS);
+            Vector coefs = Solver.BCGSTAB((Matrix.Transpose(A)) * A, (Matrix.Transpose(A)) * b, EPS);
 
        
 

@@ -7,10 +7,26 @@ using System.Threading.Tasks;
 namespace MyMathLib
 {
 
+    /*
+      public static double[] GetCardinalValue(int degree)
+        {
+            double[] mas = new double[degree - 1];
+            double h = 1;
+            for (int i = 0; i < degree - 1; i++)
+            {
+                mas[i] = CardinalSpline.Cardinal(degree, (i + 1) * h, 0, h);
+
+            }
+            return mas;
+        }
+         */
+
 
     public interface ICardinalStratagy
     {
-        double Cardinal(int degree, double x, double t_i, double h);
+        double   Cardinal(int degree, double x, double t_i, double h);
+        double[] GetCardinalValue(int degree);
+
     }
 
     //Алгоритм подсчета базисных сплайнов через разделенные разности
@@ -82,6 +98,18 @@ namespace MyMathLib
         {
             return BasisCardinal(degree, (x - t_i) / h);
         }
+
+        public double[] GetCardinalValue(int degree)
+        {
+            double[] mas = new double[degree - 1];
+            double h = 1;
+            for (int i = 0; i < degree - 1; i++)
+            {
+                mas[i] = Cardinal(degree, (i + 1) * h, 0, h);
+
+            }
+            return mas;
+        }
     }
 
     public class CardinalSpline
@@ -139,7 +167,7 @@ namespace MyMathLib
 
 
 
-
+      
 
 
 

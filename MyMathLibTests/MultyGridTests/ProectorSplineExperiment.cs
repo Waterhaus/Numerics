@@ -156,7 +156,7 @@ namespace MyMathLib
             }
 
 
-            Console.WriteLine(Matrix.transpose( B).ToString("0.00"));
+            Console.WriteLine(Matrix.Transpose( B).ToString("0.00"));
             Console.WriteLine("index = " + index);
 
 

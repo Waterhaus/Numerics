@@ -147,6 +147,21 @@ namespace MyMathLib
             return new Matrix();
         }
 
+        public static Matrix operator +(Matrix A, double b)
+        {
+            
+            
+                Matrix C = new Matrix(A.Length.n, A.Length.m);
+
+                for (int i = 0; i < A.Length.n; i++)
+                    for (int j = 0; j < A.Length.m; j++)
+                        C[i, j] = A[i, j] + b;
+
+                return C;
+            
+            
+        }
+
         public static Matrix operator -(Matrix A, Matrix B)
         {
             if (A.EqualLength(B))
@@ -231,6 +246,8 @@ namespace MyMathLib
             }
             return new Matrix();
         }
+
+
 
 
 
@@ -556,7 +573,7 @@ namespace MyMathLib
 
         }
 
-        public static Matrix transpose(Matrix A)
+        public static Matrix Transpose(Matrix A)
         {
             int n = A.Length.n;
             int m = A.Length.m;
@@ -688,6 +705,9 @@ namespace MyMathLib
                 }
             return min;
         }
+
+
+        //public static Matrix GetConstant
 
     }
 }

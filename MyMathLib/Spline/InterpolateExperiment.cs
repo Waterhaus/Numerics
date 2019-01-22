@@ -53,7 +53,7 @@ namespace MyMathLib.Spline
                         A[i, i - j] = ksi[ksi.Length - 1 - j];
                 }
             }
-            Matrix A_t = Matrix.transpose(A);
+            Matrix A_t = Matrix.Transpose(A);
             Console.WriteLine("y = " + y);
             Console.WriteLine("A_T*A = " + A);
 
@@ -298,7 +298,7 @@ namespace MyMathLib.Spline
             Matrix A = Create_LagrangeInterpolationMatrix(degree, h, N);
             // 
             double EPS = 0.0000001d;
-            Vector coefs = Solver.BCGSTAB((Matrix.transpose(A)) * A, (Matrix.transpose(A)) * b, EPS);
+            Vector coefs = Solver.BCGSTAB((Matrix.Transpose(A)) * A, (Matrix.Transpose(A)) * b, EPS);
 
             //Console.WriteLine("b = " + b);
             //Console.WriteLine("A*c - b" + (A*coefs- b));

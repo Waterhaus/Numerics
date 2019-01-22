@@ -45,7 +45,7 @@ namespace MyMathLib.MultyGrid
             int N = MultyGrid.MultyGridMethod.UpDimentionSpline4(n);
 
             Matrix R = Proektor.create_proection_spline4_mat(n);
-            Matrix P = Matrix.transpose(R);
+            Matrix P = Matrix.Transpose(R);
 
             return P * v_2h;
         }

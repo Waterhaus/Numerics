@@ -295,6 +295,24 @@ namespace MyMathLib
 
             return vec;
         }
+
+
+        public static double DotProduct(Vector x, Vector y)
+        {
+            if (x.Length == y.Length)
+            {
+                double S = 0;
+
+                for (int i = 0; i < x.Length; i++)
+                {
+                    S = S + y[i] * x[i];
+                }
+
+                return S;
+
+            }
+            else return 0;
+        }
     }
 
 }

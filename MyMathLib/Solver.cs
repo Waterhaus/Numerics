@@ -37,7 +37,7 @@ namespace MyMathLib
             double betta = 0;
 
             Matrix TA = new Matrix(A.Length.n);
-            Matrix.copy(ref TA, Matrix.transpose(A));
+            Matrix.copy(ref TA, Matrix.Transpose(A));
 
             if (MyMath.Basic.skal(r, rr) != 0)
                 for (int j = 0; ; j++)
