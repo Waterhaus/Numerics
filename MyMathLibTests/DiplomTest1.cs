@@ -34,5 +34,18 @@ namespace MyMathLibTests
             Matrix B = MyMathLib.Spline.CardinalFiniteMethod.CardinalOperators.InterpolateConditionMatrix(4,5,new DividedDifferencesStategy());
             Console.WriteLine(B);
         }
+
+        [TestMethod]
+        public void CardinalSpline_SplineVector_Test1()
+        {
+            double a = 0 , b = 1, x = 0.05;
+
+            CardinalSpline spline = new CardinalSpline();
+
+            Vector ksi = spline.SplineVector(x, a, b, 5, 5);
+            Console.WriteLine(ksi + " sum = " + MyMath.Basic.SumArray(ksi.ToArray) );
+
+
+        }
     }
 }

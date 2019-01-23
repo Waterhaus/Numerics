@@ -136,10 +136,10 @@ namespace MyMathLib
             return static_calculate.Cardinal(degree, x, t_i, h);
         }
 
-        //Функция считает значение сплайна в одной точке
-        public double CalculateSpline(double x, Vector c, double a_start, double h, int degree)
+        //Функция считает значение сплайн-функции в одной точке
+        public double CalculateSpline(double x, Vector c, double a_border, double h, int degree)
         {
-
+            double a_start = a_border - ((double)(degree - 1)) * h;
             int p = degree;
             if (x < a_start) return 0d;
             double S = 0d;
@@ -149,6 +149,20 @@ namespace MyMathLib
                 S = S + c[i] * calculate.Cardinal(degree, x, a_start + i * h, h);
             }
             return S;
+        }
+
+        public Vector SplineVector(double x, double a_border, double b_border, int SIZE, int degree)
+        {
+            Vector ksi = new Vector(SIZE + degree - 2);
+            double h = MyMath.Basic.GetStep(SIZE, a_border, b_border);
+            double a_start = a_border - ((double)(degree - 1)) * h;
+            for (int i = 0; i < ksi.Length; i++)
+            {
+                ksi[i] = calculate.Cardinal(degree, x, a_start + i*h, h);
+            }
+
+            return ksi;
+
         }
 
 
