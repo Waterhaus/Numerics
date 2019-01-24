@@ -13,6 +13,8 @@ namespace MyMathLib
         public delegate object UniFunction(object t);
         public delegate double MyFunctionDoubleDelegate(params object[] args);
 
+        
+
         public static double exp(double t)
         {
             return Math.Exp(t);

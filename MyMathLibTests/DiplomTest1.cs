@@ -47,5 +47,19 @@ namespace MyMathLibTests
 
 
         }
+
+        [TestMethod]
+        public void FirstStartOfCardinalSolverSystem()
+        {
+            int N = 10;
+            MyMathLib.Spline.CardinalFiniteMethod.CardinalSolver.SolveSecondDerevetivWhithBounderyCondition(N, 0, 1
+                , new DividedDifferencesStategy(), 1, FunctionLib.exp(1), FunctionLib.exp);
+            MyMathLib.Spline.CardinalFiniteMethod.CardinalSolver.SolveSecondDerevetivWhithBounderyCondition(2*N, 0, 1
+                , new DividedDifferencesStategy(), 1, FunctionLib.exp(1), FunctionLib.exp);
+            MyMathLib.Spline.CardinalFiniteMethod.CardinalSolver.SolveSecondDerevetivWhithBounderyCondition(3*N, 0, 1
+                , new DividedDifferencesStategy(), 1, FunctionLib.exp(1), FunctionLib.exp);
+
+
+        }
     }
 }

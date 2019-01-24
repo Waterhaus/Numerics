@@ -49,7 +49,7 @@
     <Compile Include="Spline\CardinalSpline.cs" />
     <Compile Include="Spline\BasisSpline.cs" />
     <Compile Include="LinearAlgebra\DifEquation.cs" />
-    <Compile Include="FunctionStore.cs" />
+    <Compile Include="FunctionLib.cs" />
     <Compile Include="Spline\Grid.cs" />
     <Compile Include="Integrate.cs" />
     <Compile Include="LinearAlgebra\Matrix.cs" />
