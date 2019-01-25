@@ -61,5 +61,19 @@ namespace MyMathLibTests
 
 
         }
+
+        [TestMethod]
+        public void SecondStartOfCardinalSolverSystem()
+        {
+            int N = 10;
+            MyMathLib.Spline.CardinalFiniteMethod.CardinalSolver.D2_B_bc(N, 0, 1
+                , new DividedDifferencesStategy(), 1d/2d, FunctionLib.exp(1)/2d, FunctionLib.exp);
+            MyMathLib.Spline.CardinalFiniteMethod.CardinalSolver.D2_B_bc(2 * N, 0, 1
+                , new DividedDifferencesStategy(), 1d/2d, FunctionLib.exp(1)/2d, FunctionLib.exp);
+            MyMathLib.Spline.CardinalFiniteMethod.CardinalSolver.D2_B_bc(3 * N, 0, 1
+                , new DividedDifferencesStategy(), 0.5*1, 0.5 * FunctionLib.exp(1), FunctionLib.exp);
+
+
+        }
     }
 }
