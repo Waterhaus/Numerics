@@ -75,5 +75,61 @@ namespace MyMathLibTests
 
 
         }
+
+        [TestMethod]
+        public void MainStartOfCardinalSolverSystem()
+        {
+            int N = 25;
+            double a = 0;
+            double b = 3.14;
+            FunctionLib.Function f = (t) => 0.5*Math.Sin(t);
+
+            for (int i = 5; i <= 5; i++)
+            {
+                MyMathLib.Spline.CardinalFiniteMethod.CardinalSolver.D4_B_bc(31, a, b
+                , new DividedDifferencesStategy(),
+                0, FunctionLib.sin(b),
+                0, -FunctionLib.sin(b),
+                f);
+                //System.Diagnostics.Debug.WriteLine("===================");
+                Console.WriteLine("=========================================");
+            }
+            
+         
+
+        }
+
+        [TestMethod]
+        public void SaveMatrixCardinalSolverSystem()
+        {
+            int N = 100;
+            double a = 0;
+            double b = N - 1;
+
+
+            Matrix A = MyMathLib.Spline.CardinalFiniteMethod.CardinalSolver.D4_B_Matrix(N, a, b, new DividedDifferencesStategy());
+            A.Save("D4_B_Test1.txt");
+            A = MyMathLib.Spline.CardinalFiniteMethod.CardinalSolver.D1_Matrix(N, a, b, new DividedDifferencesStategy());
+            A.Save("D1_Test1.txt");
+
+
+        }
+        //==========================================================================
+
+
+        [TestMethod]
+        public void pr_coef_test1()
+        {
+            for (int i = 2; i < 10; i++)
+            {
+
+                Vector c = new Vector(CardinalSpline.pr_coef(i));
+                Console.WriteLine(c);
+
+            }
+        }
+
+
+
     }
 }

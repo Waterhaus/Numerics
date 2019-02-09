@@ -709,5 +709,30 @@ namespace MyMathLib
 
         //public static Matrix GetConstant
 
+        public void Save(string name)
+        {
+            const string path = @"C:\TXT\MML";
+
+            // Create a string array with the lines of text
+            string[] lines = new string[n + 1];
+            for (int i = 1; i < n + 1; i++)
+            {
+                lines[i] = "";
+                for (int j = 0; j < m; j++)
+                {
+                    lines[i] += M[i - 1, j].ToString() + " ";
+                }
+            }
+            lines[0] = n.ToString() + " " + m.ToString();
+            // Write the string array to a new file named "WriteLines.txt".
+            using (System.IO.StreamWriter outputFile = new System.IO.StreamWriter(System.IO.Path.Combine(path, name)))
+            {
+                foreach (string line in lines)
+                    outputFile.WriteLine(line);
+            }
+
+        }
+
+
     }
 }

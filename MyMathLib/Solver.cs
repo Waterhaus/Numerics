@@ -73,7 +73,7 @@ namespace MyMathLib
                     pp = rr1 + betta * h;
                     r = r1;
                     rr = rr1;
-
+                    Console.WriteLine(r.Norm);
                 }
             else Console.WriteLine("BCG: (r0, rr0)=0 - Выберите другое приближение");
             return x;

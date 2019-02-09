@@ -52,5 +52,16 @@ namespace MyMathLib.Spline.CardinalFiniteMethod
 
         }
 
+
+
+        public static Vector proector_2h(Vector c, int degree)
+        {
+            if(c.Length % 2 == 0)
+            {
+
+            }
+            return null;
+        }
+
     }
 }

@@ -180,7 +180,17 @@ namespace MyMathLib
         }
 
 
-
+        public static double[] pr_coef(int degree)
+        {
+            int n = degree;
+            double[] coef = new double[n + 1];
+            for (int k = 0; k <= n; k++)
+            {
+                coef[k] = MyMath.Basic.BinomialCoeff(n, k) / Math.Pow(2d, n - 1);
+            }
+            return coef;
+                
+        }
       
 
 
